@@ -1,0 +1,5 @@
+edge_profile/
+*.tmp
+*.log
+scratch_dom.html
+cdp_check.ps1
