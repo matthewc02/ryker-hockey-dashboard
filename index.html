@@ -38,7 +38,7 @@
   <script src="assets/js/rink.js"></script>
   <script src="assets/js/charts.js"></script>
   <script src="assets/js/app.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
 </head>
 <body x-data="hockeyApp()" x-init="initApp()" class="min-h-screen text-slate-100 selection:bg-amber-500 selection:text-slate-950">
 
@@ -170,7 +170,7 @@
         </div>
 
         <div class="text-[11px] text-slate-400 italic">
-          Viewing: <strong class="text-amber-300" x-text="seasonArchives[selectedSeason]?.name || '2026-27 Season'"></strong>
+          Viewing: <strong class="text-amber-300" x-text="seasonArchives[selectedSeason] ? seasonArchives[selectedSeason].name : '2026-27 Season'"></strong>
         </div>
       </div>
 
@@ -1878,9 +1878,15 @@
         <div>
           <label class="block text-slate-400 font-bold mb-1">Who is Cheerleader?</label>
           <select x-model="newCheer.author" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white">
-            <template x-for="f in family" :key="f.id">
-              <option :value="f.name" x-text="f.name + ' (' + f.role + ')'"></option>
-            </template>
+            <option value="Mom">Mom (Team General & Chief Fuel Officer)</option>
+            <option value="Dad">Dad (Pushup Rival & Home Coach)</option>
+            <option value="Brillianna">Brillianna (Cheer Captain & Sister #1)</option>
+            <option value="Aurora">Aurora (Superfan Sister)</option>
+            <option value="Matthison">Matthison (Brother in Arms)</option>
+            <option value="Sasha Gier">Sasha Gier (Russian Boxing Master)</option>
+            <option value="Mau">Mau (Locker Room Mascot • Cat)</option>
+            <option value="Atom">Atom (Zoomies Speed Coach • Cat)</option>
+            <option value="Jax">Jax (Puck Hunter • Cat)</option>
           </select>
         </div>
 

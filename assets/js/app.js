@@ -860,7 +860,9 @@ function hockeyApp() {
   };
 }
 
-// Alpine.js Registration
+// Global Export & Alpine.js Registration
+window.hockeyApp = hockeyApp;
+
 if (typeof window.Alpine !== 'undefined') {
   window.Alpine.data('hockeyApp', hockeyApp);
 } else {
