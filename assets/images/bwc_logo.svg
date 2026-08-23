@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="iceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+  <path d="M100 8 L185 38 V110 C185 155 145 185 100 196 C55 185 15 155 15 110 V38 Z" fill="#090D16" stroke="url(#goldGrad)" stroke-width="6"/>
+  <path d="M100 18 L172 44 V108 C172 146 138 172 100 182 C62 172 28 146 28 108 V44 Z" fill="#0F172A" stroke="#334155" stroke-width="2"/>
+  <path d="M35 115 L100 55 L165 115 L145 115 L100 75 L55 115 Z" fill="url(#iceGrad)" opacity="0.3"/>
+  <circle cx="100" cy="100" r="42" fill="#020617" stroke="url(#goldGrad)" stroke-width="3"/>
+  <text x="100" y="88" text-anchor="middle" fill="#FFFFFF" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="28" letter-spacing="1">BWC</text>
+  <text x="100" y="116" text-anchor="middle" fill="url(#goldGrad)" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="22" letter-spacing="2">#23</text>
+  <text x="100" y="162" text-anchor="middle" fill="#38BDF8" font-family="sans-serif" font-weight="800" font-size="10" letter-spacing="3">ACADEMY</text>
+</svg>

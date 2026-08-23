@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="redGlove" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="60%" stop-color="#B91C1C"/>
+      <stop offset="100%" stop-color="#7F1D1D"/>
+    </linearGradient>
+    <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="94" fill="#0B0F19" stroke="url(#goldTrim)" stroke-width="5"/>
+  <circle cx="100" cy="100" r="86" fill="#111827" stroke="#374151" stroke-width="2"/>
+  
+  <!-- Boxing Glove Shape -->
+  <path d="M70,55 C95,45 135,55 142,85 C146,102 138,125 125,138 L115,148 C108,155 92,155 85,148 L75,138 C62,125 54,102 58,85 C62,70 65,60 70,55 Z" fill="url(#redGlove)" stroke="#FEE2E2" stroke-width="2"/>
+  <!-- Thumb -->
+  <path d="M58,88 C48,95 44,115 54,126 C62,132 72,128 75,118 L76,100 Z" fill="url(#redGlove)" stroke="#FEE2E2" stroke-width="2"/>
+  <!-- Wrist Wrap / Laces -->
+  <rect x="75" y="142" width="50" height="22" rx="4" fill="#1E293B" stroke="url(#goldTrim)" stroke-width="2"/>
+  <line x1="85" y1="145" x2="115" y2="145" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="85" y1="152" x2="115" y2="152" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="85" y1="159" x2="115" y2="159" stroke="#FFFFFF" stroke-width="2"/>
+  <!-- Russian Master Crest text -->
+  <text x="100" y="42" text-anchor="middle" fill="url(#goldTrim)" font-family="Impact, sans-serif" font-weight="900" font-size="14" letter-spacing="1">SASHA GIER</text>
+  <text x="100" y="186" text-anchor="middle" fill="#94A3B8" font-family="sans-serif" font-weight="800" font-size="9" letter-spacing="2">60 YR RUSSIAN COACH</text>
+</svg>

@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ryker Crosby Carson #23 | Burnaby Winter Club Pro Hockey Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            bwcGold: {
+              300: '#FDE047',
+              400: '#FACC15',
+              500: '#F59E0B',
+              600: '#D97706',
+              700: '#B45309',
+            },
+            ice: {
+              400: '#38BDF8',
+              500: '#0EA5E9',
+              600: '#0284C7',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="assets/js/sfx.js"></script>
+  <script src="assets/js/rink.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script src="assets/js/app.js"></script>
+</head>
+<body x-data="hockeyApp()" x-init="initApp()" class="min-h-screen text-slate-100 selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 text-slate-950 font-bold px-4 py-1.5 text-xs flex flex-wrap items-center justify-between shadow-md">
+    <div class="flex items-center gap-2">
+      <span class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded text-[10px] font-tech uppercase tracking-wider">NHL Prospect Hub</span>
+      <span class="hidden sm:inline">Burnaby Winter Club (BWC Academy) U18 Prep • #23 Ryker Crosby Carson</span>
+    </div>
+    
+    <div class="flex items-center gap-4 text-[11px]">
+      <div class="flex items-center gap-1.5">
+        <span class="animate-pulse">🔥</span>
+        <span class="font-bold">Pushup Showdown:</span>
+        <span class="bg-slate-950/20 px-1.5 py-0.5 rounded">Ryker: <strong x-text="pushups.todayRyker"></strong></span>
+        <span>vs</span>
+        <span class="bg-slate-950/20 px-1.5 py-0.5 rounded">Dad: <strong x-text="pushups.todayDad"></strong></span>
+      </div>
+      <button @click="triggerGoalHorn()" class="bg-slate-950 hover:bg-slate-800 text-amber-400 px-2.5 py-0.5 rounded transition flex items-center gap-1">
+        <span>🚨</span> Blast Goal Horn
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 py-6 space-y-6">
+
+    <!-- Header & Player Profile Card -->
+    <header class="glass-panel rounded-3xl p-5 sm:p-7 relative overflow-hidden border border-amber-500/30">
+      <div class="absolute -top-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
+        <!-- Player Identity Group -->
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+          <!-- Player Photo Frame with Upload Option -->
+          <div class="relative group">
+            <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border-2 border-amber-400 p-1 bg-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+              <img :src="player.avatar" alt="Ryker Crosby Carson" class="w-full h-full object-cover object-top rounded-xl group-hover:scale-105 transition duration-300" />
+            </div>
+            
+            <label class="absolute inset-0 rounded-2xl bg-slate-950/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-[10px] font-bold text-amber-300 cursor-pointer transition">
+              <span class="text-sm mb-0.5">📷</span>
+              <span>Change Pic</span>
+              <input type="file" accept="image/*" class="hidden" @change="handleProfileUpload($event)" />
+            </label>
+
+            <div class="absolute -bottom-2 -right-2 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs font-scoreboard px-2.5 py-0.5 rounded-lg shadow-lg border border-amber-300">
+              #23
+            </div>
+          </div>
+
+          <!-- Name & Team Info -->
+          <div class="space-y-1.5">
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                NHL Draft Eligible Class
+              </span>
+              <span class="text-xs text-sky-400 bg-sky-500/10 px-2.5 py-0.5 rounded-full border border-sky-500/30">17 Yrs Old • CSSHL U18 Prep</span>
+              <a :href="player.eliteProspectsUrl" target="_blank" class="text-xs text-slate-300 bg-slate-800 hover:bg-slate-700 px-2.5 py-0.5 rounded-full border border-slate-700 font-medium transition flex items-center gap-1">
+                <span>🔗</span> Elite Prospects Profile
+              </a>
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight font-display text-white">
+              Ryker Crosby Carson <span class="text-amber-400 font-scoreboard text-3xl sm:text-5xl">#23</span>
+            </h1>
+
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs sm:text-sm text-slate-300 font-medium">
+              <span class="flex items-center gap-1 text-amber-400 font-bold">
+                <img :src="player.bwcLogo" class="w-4 h-4 inline-block" alt="BWC" /> Burnaby Winter Club
+              </span>
+              <span>•</span>
+              <span>Forward (Center / RW)</span>
+              <span>•</span>
+              <span>6'1" / 188 lbs</span>
+              <span>•</span>
+              <span class="text-slate-400">Whistler & Burnaby, BC</span>
+            </div>
+
+            <div class="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs">
+              <span class="bg-slate-800/80 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700">🏆 1.96 PPG Scoring Pace</span>
+              <span class="bg-slate-800/80 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700">⚡ VO2 Max: 62.4 (Elite)</span>
+              <span class="bg-slate-800/80 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700">🥊 Sasha Gier Boxing (60yo Master)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action Button Panel & BWC Logo -->
+        <div class="flex flex-col items-center lg:items-end gap-3 w-full lg:w-auto">
+          <div class="hidden sm:flex items-center gap-3 bg-slate-900/80 px-4 py-2 rounded-2xl border border-amber-500/20">
+            <div class="w-10 h-10">
+              <img :src="player.bwcLogo" alt="Burnaby Winter Club" class="w-full h-full" />
+            </div>
+            <div>
+              <div class="text-xs font-black tracking-wider text-amber-400 font-tech">BURNABY WINTER CLUB</div>
+              <div class="text-[11px] text-slate-400">Elite Hockey Academy Program</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <button @click="showAddGameModal = true" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 flex items-center gap-1.5 transition">
+              <span>🏒</span> Log Game Stats
+            </button>
+            <button @click="downloadStats()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/30 flex items-center gap-1.5 transition">
+              <span>📥</span> Download Stats JSON
+            </button>
+            <button @click="activeTab = 'pushups'" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs border border-amber-500/30 flex items-center gap-1.5 transition">
+              <span>💪</span> Pushup Duel
+            </button>
+            <button @click="toggleMute()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs transition" :title="soundMuted ? 'Unmute Sound' : 'Mute Sound'">
+              <span x-text="soundMuted ? '🔇' : '🔊'"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Season Selector Navigation Bar -->
+      <div class="mt-6 pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">Season View:</span>
+          <div class="inline-flex rounded-xl bg-slate-900/90 p-1 border border-slate-800">
+            <button @click="setSeason('2026-27')" :class="selectedSeason === '2026-27' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg transition font-medium">2026-27 (Current)</button>
+            <button @click="setSeason('2025-26')" :class="selectedSeason === '2025-26' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg transition font-medium">2025-26 (U17 AAA)</button>
+            <button @click="setSeason('2024-25')" :class="selectedSeason === '2024-25' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg transition font-medium">2024-25 (U15 AAA)</button>
+            <button @click="setSeason('career')" :class="selectedSeason === 'career' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg transition font-medium">CSSHL Career Totals</button>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-slate-400 italic">
+          Viewing: <strong class="text-amber-300" x-text="seasonArchives[selectedSeason]?.name || '2026-27 Season'"></strong>
+        </div>
+      </div>
+
+      <!-- Season KPI Ticker Bar -->
+      <div class="mt-3 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 gap-2.5 text-center">
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 stat-card">
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">GP</div>
+          <div class="text-xl sm:text-2xl font-black text-white font-scoreboard" x-text="totalGP"></div>
+        </div>
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-amber-500/30 stat-card">
+          <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">GOALS</div>
+          <div class="text-xl sm:text-2xl font-black text-amber-400 font-scoreboard" x-text="totalGoals"></div>
+        </div>
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 stat-card">
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ASSISTS</div>
+          <div class="text-xl sm:text-2xl font-black text-sky-400 font-scoreboard" x-text="totalAssists"></div>
+        </div>
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-amber-500/40 stat-card">
+          <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">POINTS</div>
+          <div class="text-xl sm:text-2xl font-black text-amber-300 font-scoreboard" x-text="totalPoints"></div>
+        </div>
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 stat-card">
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">HITS</div>
+          <div class="text-xl sm:text-2xl font-black text-rose-400 font-scoreboard" x-text="totalHits"></div>
+        </div>
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 stat-card">
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">+/-</div>
+          <div class="text-xl sm:text-2xl font-black text-emerald-400 font-scoreboard" x-text="totalPlusMinus > 0 ? '+' + totalPlusMinus : totalPlusMinus"></div>
+        </div>
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 stat-card">
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">PIM</div>
+          <div class="text-xl sm:text-2xl font-black text-slate-300 font-scoreboard" x-text="totalPIM"></div>
+        </div>
+        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 stat-card">
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">SHOT %</div>
+          <div class="text-xl sm:text-2xl font-black text-amber-400 font-scoreboard" x-text="shootingPercentage"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs Bar (All Modules) -->
+    <nav class="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-slate-800/80 text-xs sm:text-sm font-semibold">
+      <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>🏆</span> Overview
+      </button>
+      <button @click="activeTab = 'stats'; $nextTick(() => window.initScoringChart(games))" :class="activeTab === 'stats' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>🏒</span> NHL Hopeful Stats & Rink
+      </button>
+      <button @click="activeTab = 'wearable'" :class="activeTab === 'wearable' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>⌚</span> Elite Wearable (VO2 & Power)
+      </button>
+      <button @click="activeTab = 'boxing'" :class="activeTab === 'boxing' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>🥊</span> Boxing (Sasha Gier)
+      </button>
+      <button @click="activeTab = 'webcam'" :class="activeTab === 'webcam' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>📹</span> Whistler Live Cam
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      </button>
+      <button @click="activeTab = 'hiking'" :class="activeTab === 'hiking' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>🥾</span> Hiking Tracker
+      </button>
+      <button @click="activeTab = '4x4'" :class="activeTab === '4x4' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>🚙</span> 4x4 Driving
+      </button>
+      <button @click="activeTab = 'fishing'" :class="activeTab === 'fishing' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>🎣</span> Fishing
+      </button>
+      <button @click="activeTab = 'onewheel'" :class="activeTab === 'onewheel' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>🛹</span> Onewheel
+      </button>
+      <button @click="activeTab = 'pushups'; $nextTick(() => window.initPushupDuelChart(pushups.history))" :class="activeTab === 'pushups' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>💪</span> Pushup Duel
+        <span class="bg-amber-500 text-slate-950 text-[10px] font-black px-1.5 rounded-full">VS DAD</span>
+      </button>
+      <button @click="activeTab = 'family'" :class="activeTab === 'family' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>👨‍👩‍👧‍👦</span> Family & Cats
+      </button>
+      <button @click="activeTab = 'scouting'; $nextTick(() => window.initScoutingRadar(scoutRadar))" :class="activeTab === 'scouting' ? 'active text-amber-400' : 'text-slate-400 hover:text-slate-200'" class="nav-tab px-3.5 py-2 rounded-t-xl transition flex items-center gap-1.5 whitespace-nowrap">
+        <span>📋</span> NHL Scout Card
+      </button>
+    </nav>
+    <!-- TAB 1: OVERVIEW -->
+    <div x-show="activeTab === 'overview'" class="space-y-6">
+      
+      <!-- Top Multi-Hub Highlights: Garmin Wearable & Whistler Cam Banner -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        <!-- Garmin / Apple Watch Quick Pulse (6 cols) -->
+        <div class="md:col-span-6 glass-panel rounded-3xl p-5 border border-sky-500/30 flex flex-col justify-between cursor-pointer hover:border-sky-400 transition" @click="activeTab = 'wearable'">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">⌚</span>
+              <div>
+                <h3 class="text-sm font-bold text-white font-tech uppercase tracking-wide">Elite Biometrics • Garmin / Apple Watch Hub</h3>
+                <p class="text-[11px] text-slate-400">Live physiological strain & anaerobic readiness</p>
+              </div>
+            </div>
+            <span class="text-xs bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">Prime State</span>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 text-center my-2">
+            <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+              <div class="text-[9px] text-slate-400 uppercase font-bold">VO2 MAX</div>
+              <div class="text-lg font-black text-amber-400 font-scoreboard" x-text="wearable.vo2Max"></div>
+              <div class="text-[9px] text-emerald-400 font-bold">Superior</div>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+              <div class="text-[9px] text-slate-400 uppercase font-bold">STEPS</div>
+              <div class="text-lg font-black text-sky-400 font-scoreboard" x-text="wearable.dailySteps.toLocaleString()"></div>
+              <div class="text-[9px] text-slate-400">15k Goal</div>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+              <div class="text-[9px] text-slate-400 uppercase font-bold">ENERGY</div>
+              <div class="text-lg font-black text-rose-400 font-scoreboard" x-text="wearable.totalCalories"></div>
+              <div class="text-[9px] text-slate-400">kcal</div>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+              <div class="text-[9px] text-slate-400 uppercase font-bold">SPRINT WATTS</div>
+              <div class="text-lg font-black text-yellow-300 font-scoreboard" x-text="wearable.peakPowerWatts + 'W'"></div>
+              <div class="text-[9px] text-slate-400">Peak Burst</div>
+            </div>
+          </div>
+
+          <div class="mt-2 pt-2 border-t border-slate-800/80 flex justify-between text-xs text-sky-400 font-semibold">
+            <span>HRV: <strong class="text-white" x-text="wearable.hrvMs + ' ms'"></strong> • SpO2: <strong class="text-white" x-text="wearable.spo2Percent + '%'"></strong></span>
+            <span>Open Wearable Telemetry →</span>
+          </div>
+        </div>
+
+        <!-- Whistler Live Webcam Quick Card (6 cols) -->
+        <div class="md:col-span-6 glass-panel rounded-3xl p-5 border border-amber-500/30 flex flex-col justify-between cursor-pointer hover:border-amber-400 transition" @click="activeTab = 'webcam'">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🏔️</span>
+              <div>
+                <h3 class="text-sm font-bold text-white font-tech uppercase tracking-wide">Live Whistler Webcam (Back Home)</h3>
+                <p class="text-[11px] text-slate-400">Whistler Mountain Roundhouse & Valley Vista</p>
+              </div>
+            </div>
+            <span class="text-xs bg-red-500/20 text-red-300 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span> LIVE
+            </span>
+          </div>
+
+          <div class="relative h-28 w-full rounded-2xl overflow-hidden border border-slate-700/80 shadow-md group">
+            <img :src="whistlerWebcam.currentPhoto" alt="Whistler Live" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <div class="absolute bottom-1.5 left-2 bg-slate-950/80 px-2 py-0.5 rounded-md text-[10px] text-white font-bold flex items-center gap-2 border border-slate-700">
+              <span x-text="whistlerWebcam.locationName"></span>
+              <span>•</span>
+              <span class="text-amber-400" x-text="whistlerWebcam.temperature"></span>
+            </div>
+          </div>
+
+          <div class="mt-2 pt-2 border-t border-slate-800/80 flex justify-between text-xs text-amber-400 font-semibold">
+            <span class="text-slate-400" x-text="whistlerWebcam.lastUpdated"></span>
+            <span>Expand Whistler Cam →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Duel & Scoring Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Pushup Duel Spotlight Card (5 cols) -->
+        <div class="lg:col-span-5 glass-panel-gold rounded-3xl p-6 relative overflow-hidden flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">⚔️</span>
+              <div>
+                <h3 class="font-extrabold text-white text-base tracking-wide uppercase font-tech">The Carson Pushup Cup</h3>
+                <p class="text-xs text-amber-300/80 font-medium">Daily Rivalry: Ryker #23 vs. Dad</p>
+              </div>
+            </div>
+            <span class="bg-amber-500 text-slate-950 text-xs font-black px-2 py-0.5 rounded-full uppercase">Day 19 Streak</span>
+          </div>
+
+          <!-- Duel Head-to-Head Visual -->
+          <div class="grid grid-cols-2 gap-4 my-2">
+            <!-- Ryker Side -->
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-amber-400/40 text-center relative">
+              <div class="w-14 h-14 rounded-full overflow-hidden mx-auto border-2 border-amber-400 mb-2">
+                <img :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
+              </div>
+              <div class="font-bold text-xs text-amber-300">Ryker #23</div>
+              <div class="text-3xl font-black text-amber-400 font-scoreboard my-1" x-text="pushups.todayRyker"></div>
+              <div class="text-[10px] text-slate-400">Target: 150/day</div>
+              <div class="flex justify-center gap-1.5 mt-3">
+                <button @click="addPushups('ryker', 10)" class="px-2 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[11px] rounded transition">+10</button>
+                <button @click="addPushups('ryker', 25)" class="px-2 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[11px] rounded transition">+25</button>
+                <button @click="addPushups('ryker', 50)" class="px-2 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[11px] rounded transition">+50</button>
+              </div>
+            </div>
+
+            <!-- Dad Side -->
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-sky-400/40 text-center relative">
+              <div class="w-14 h-14 rounded-full overflow-hidden mx-auto border-2 border-sky-400 mb-2">
+                <img src="assets/images/dad.jpg" alt="Dad" class="w-full h-full object-cover" />
+              </div>
+              <div class="font-bold text-xs text-sky-300">Dad</div>
+              <div class="text-3xl font-black text-sky-400 font-scoreboard my-1" x-text="pushups.todayDad"></div>
+              <div class="text-[10px] text-slate-400">Target: 150/day</div>
+              <div class="flex justify-center gap-1.5 mt-3">
+                <button @click="addPushups('dad', 10)" class="px-2 py-1 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-[11px] rounded transition">+10</button>
+                <button @click="addPushups('dad', 25)" class="px-2 py-1 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-[11px] rounded transition">+25</button>
+                <button @click="addPushups('dad', 50)" class="px-2 py-1 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-[11px] rounded transition">+50</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Banter Quote Box -->
+          <div class="mt-4 p-3 bg-slate-950/70 rounded-xl border border-amber-500/20 text-xs text-amber-200 italic flex items-center gap-2">
+            <span class="text-lg">💬</span>
+            <span x-text="currentBanter"></span>
+          </div>
+
+          <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-3">
+            <span>All-Time: Ryker (<strong class="text-amber-400" x-text="pushups.allTimeRyker"></strong>) vs Dad (<strong class="text-sky-400" x-text="pushups.allTimeDad"></strong>)</span>
+            <button @click="activeTab = 'pushups'" class="text-amber-400 hover:underline font-bold">View Rivalry Hub →</button>
+          </div>
+        </div>
+
+        <!-- Scoring Trajectory Chart (7 cols) -->
+        <div class="lg:col-span-7 glass-panel rounded-3xl p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-extrabold text-white text-base tracking-wide uppercase font-tech flex items-center gap-2">
+                <span>📈</span> NHL Prospect Scoring Trajectory
+              </h3>
+              <p class="text-xs text-slate-400">Cumulative points pace compared against elite Tier-1 junior draft baseline</p>
+            </div>
+            <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30 font-semibold">+57% Ahead of Draft Avg</span>
+          </div>
+
+          <div class="relative h-64 w-full">
+            <canvas id="scoringChart"></canvas>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-3 gap-3 text-center text-xs">
+            <div class="bg-slate-900/60 p-2 rounded-xl">
+              <span class="text-slate-400 block text-[10px]">Points Per Game</span>
+              <span class="text-amber-400 font-bold text-sm" x-text="pointsPerGame + ' PPG'"></span>
+            </div>
+            <div class="bg-slate-900/60 p-2 rounded-xl">
+              <span class="text-slate-400 block text-[10px]">Goal Ratio</span>
+              <span class="text-rose-400 font-bold text-sm" x-text="totalGP ? (totalGoals / totalGP).toFixed(2) + ' G/GP' : '0'"></span>
+            </div>
+            <div class="bg-slate-900/60 p-2 rounded-xl">
+              <span class="text-slate-400 block text-[10px]">Projected 60G Total</span>
+              <span class="text-sky-400 font-bold text-sm" x-text="Math.round(pointsPerGame * 60) + ' PTS'"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick 4 Multi-Sport Adventure Cards: Boxing, Hiking, 4x4, Fishing -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Boxing Card -->
+        <div class="glass-panel rounded-3xl p-5 border border-red-500/30 hover:border-red-400 transition cursor-pointer" @click="activeTab = 'boxing'">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🥊</span>
+              <div>
+                <h4 class="font-bold text-white text-sm">Boxing with Sasha Gier</h4>
+                <p class="text-[10px] text-slate-400">60yo Russian Master Coach</p>
+              </div>
+            </div>
+            <span class="text-xs bg-red-500/20 text-red-300 font-bold px-2 py-0.5 rounded-full" x-text="boxing.totalRounds + ' Rds'"></span>
+          </div>
+          <p class="text-xs text-slate-300 italic bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 line-clamp-2">"Turn the hips through the cross like a slap shot!"</p>
+          <div class="mt-3 flex justify-between text-xs text-red-400 font-semibold">
+            <span>Sasha Gier Logs →</span>
+            <span class="text-slate-400" x-text="boxing.sessions.length + ' Sessions'"></span>
+          </div>
+        </div>
+
+        <!-- Hiking Card -->
+        <div class="glass-panel rounded-3xl p-5 border border-emerald-500/30 hover:border-emerald-400 transition cursor-pointer" @click="activeTab = 'hiking'">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🥾</span>
+              <div>
+                <h4 class="font-bold text-white text-sm">Whistler Hiking</h4>
+                <p class="text-[10px] text-slate-400">Garibaldi & Alpine Peaks</p>
+              </div>
+            </div>
+            <span class="text-xs bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full" x-text="hiking.totalElevationM.toLocaleString() + 'm Elev'"></span>
+          </div>
+          <div class="text-xs text-slate-300 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+            <strong class="text-emerald-300">Longest:</strong> Panorama Ridge (30 km)
+          </div>
+          <div class="mt-3 flex justify-between text-xs text-emerald-400 font-semibold">
+            <span>Summit Trails →</span>
+            <span class="text-slate-400" x-text="hiking.totalHikes + ' Hikes'"></span>
+          </div>
+        </div>
+
+        <!-- 4x4 Driving Card -->
+        <div class="glass-panel rounded-3xl p-5 border border-amber-500/30 hover:border-amber-400 transition cursor-pointer" @click="activeTab = '4x4'">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🚙</span>
+              <div>
+                <h4 class="font-bold text-white text-sm">4x4 Driving Adventures</h4>
+                <p class="text-[10px] text-slate-400">BC Backcountry FSR</p>
+              </div>
+            </div>
+            <span class="text-xs bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-full" x-text="fourByFour.totalOffRoadKm + ' km'"></span>
+          </div>
+          <div class="text-xs text-slate-300 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+            <strong class="text-amber-300">Rig:</strong> 35" M/T Tires & Lockers
+          </div>
+          <div class="mt-3 flex justify-between text-xs text-amber-400 font-semibold">
+            <span>Overland Logs →</span>
+            <span class="text-slate-400" x-text="fourByFour.expeditions + ' Expeditions'"></span>
+          </div>
+        </div>
+
+        <!-- Fishing Card -->
+        <div class="glass-panel rounded-3xl p-5 border border-cyan-500/30 hover:border-cyan-400 transition cursor-pointer" @click="activeTab = 'fishing'">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🎣</span>
+              <div>
+                <h4 class="font-bold text-white text-sm">BC Fishing Log</h4>
+                <p class="text-[10px] text-slate-400">Cheakamus & Whistler Lakes</p>
+              </div>
+            </div>
+            <span class="text-xs bg-cyan-500/20 text-cyan-300 font-bold px-2 py-0.5 rounded-full" x-text="fishing.totalCatches + ' Catches'"></span>
+          </div>
+          <div class="text-xs text-slate-300 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+            <strong class="text-cyan-300">PB:</strong> 18.5 lb Chinook Salmon
+          </div>
+          <div class="mt-3 flex justify-between text-xs text-cyan-400 font-semibold">
+            <span>Angler Log →</span>
+            <span class="text-slate-400" x-text="fishing.daysOnWater + ' Days'"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: NHL HOPEFUL STATS & RINK -->
+    <div x-show="activeTab === 'stats'" class="space-y-6">
+      <div class="glass-panel rounded-3xl p-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-white font-display flex items-center gap-2">
+              <span>🎯</span> Offensive Zone Shot Heatmap & Shot Locator
+            </h2>
+            <p class="text-xs text-slate-400">Interactive ice rink tracking high-danger slot chances, goals, and release types for Ryker #23</p>
+          </div>
+          <button @click="showAddShotModal = true" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+            <span>➕</span> Log Shot on Rink
+          </button>
+        </div>
+
+        <div id="rinkContainer" class="w-full flex justify-center"></div>
+      </div>
+
+      <div class="glass-panel rounded-3xl p-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+          <div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>📋</span> BWC Academy Season Game-by-Game Log
+            </h3>
+            <p class="text-xs text-slate-400">Complete performance ledger including 3-Star selections, TOI, and physical hits</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button @click="showAddGameModal = true" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition flex items-center gap-1">
+              <span>➕</span> Add New Game
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-slate-800">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/90 text-slate-400 font-tech uppercase text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-3.5">Date</th>
+                <th class="p-3.5">Opponent</th>
+                <th class="p-3.5">Result</th>
+                <th class="p-3.5 text-center text-amber-400">G</th>
+                <th class="p-3.5 text-center text-sky-400">A</th>
+                <th class="p-3.5 text-center text-amber-300 font-bold">PTS</th>
+                <th class="p-3.5 text-center text-rose-400">Hits</th>
+                <th class="p-3.5 text-center text-emerald-400">+/-</th>
+                <th class="p-3.5 text-center">PIM</th>
+                <th class="p-3.5 text-center">SOG</th>
+                <th class="p-3.5 text-center">TOI</th>
+                <th class="p-3.5">Game Honors</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 bg-slate-950/40 font-medium">
+              <template x-for="game in games" :key="game.id">
+                <tr class="hover:bg-slate-800/40 transition">
+                  <td class="p-3.5 text-slate-400 whitespace-nowrap" x-text="game.date"></td>
+                  <td class="p-3.5 text-white font-bold whitespace-nowrap" x-text="game.opponent"></td>
+                  <td class="p-3.5 whitespace-nowrap">
+                    <span :class="game.result.startsWith('W') ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'" class="px-2 py-0.5 rounded text-[11px] font-bold" x-text="game.result"></span>
+                  </td>
+                  <td class="p-3.5 text-center font-bold text-amber-400 text-sm" x-text="game.goals"></td>
+                  <td class="p-3.5 text-center font-bold text-sky-400 text-sm" x-text="game.assists"></td>
+                  <td class="p-3.5 text-center font-black text-amber-300 text-sm bg-amber-500/5" x-text="Number(game.goals) + Number(game.assists)"></td>
+                  <td class="p-3.5 text-center font-semibold text-rose-300" x-text="game.hits"></td>
+                  <td class="p-3.5 text-center font-bold text-emerald-400" x-text="game.plusMinus > 0 ? '+' + game.plusMinus : game.plusMinus"></td>
+                  <td class="p-3.5 text-center text-slate-400" x-text="game.pim"></td>
+                  <td class="p-3.5 text-center text-slate-300" x-text="game.sog"></td>
+                  <td class="p-3.5 text-center text-slate-400" x-text="game.toi"></td>
+                  <td class="p-3.5">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" x-text="game.stars"></span>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- TAB 3: ELITE WEARABLE FITNESS & VO2 MAX TRACKER (GARMIN / APPLE WATCH ULTRA) -->
+    <div x-show="activeTab === 'wearable'" class="space-y-6">
+      
+      <!-- Wearable Hero Dashboard Header -->
+      <div class="glass-panel-ice rounded-3xl p-6 sm:p-8 border border-sky-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-xs font-bold border border-sky-500/40 mb-1">
+              <span>⌚</span> CONNECTED BIOMETRIC TELEMETRY • GARMIN & APPLE WATCH ULTRA
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display">Elite Athlete Physiological Suite</h2>
+            <p class="text-xs text-slate-300">Continuous cardiovascular monitoring, anaerobic burst power, metabolic workload, and recovery kinetics</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1.5 rounded-xl bg-slate-900 border border-emerald-500/40 text-xs text-emerald-300 font-bold flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> Live Sensor Sync
+            </span>
+          </div>
+        </div>
+
+        <!-- 4 Major Elite Wearable Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-800 text-center">
+          <div class="bg-slate-900/90 p-4 rounded-2xl border-2 border-amber-400/50 shadow-lg">
+            <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">VO2 MAX (CARDIO POWER)</div>
+            <div class="text-4xl font-black text-amber-400 font-scoreboard my-1" x-text="wearable.vo2Max"></div>
+            <div class="text-[10px] text-emerald-400 font-bold" x-text="wearable.vo2Tier"></div>
+            <div class="text-[9px] text-slate-400 mt-1">NHL Draft Combine Elite Standard</div>
+          </div>
+
+          <div class="bg-slate-900/90 p-4 rounded-2xl border-2 border-sky-400/50 shadow-lg">
+            <div class="text-[10px] text-sky-400 font-bold uppercase tracking-wider">DAILY STEPS</div>
+            <div class="text-4xl font-black text-sky-300 font-scoreboard my-1" x-text="wearable.dailySteps.toLocaleString()"></div>
+            <div class="text-[10px] text-slate-300">Target: 15,000 Steps</div>
+            <div class="text-[9px] text-emerald-400 mt-1">123% of Daily Goal Completed</div>
+          </div>
+
+          <div class="bg-slate-900/90 p-4 rounded-2xl border-2 border-rose-500/50 shadow-lg">
+            <div class="text-[10px] text-rose-400 font-bold uppercase tracking-wider">ACTIVE & TOTAL ENERGY</div>
+            <div class="text-4xl font-black text-rose-400 font-scoreboard my-1" x-text="wearable.totalCalories"></div>
+            <div class="text-[10px] text-slate-300">Active Burn: <strong class="text-rose-300" x-text="wearable.activeCalories + ' kcal'"></strong></div>
+            <div class="text-[9px] text-slate-400 mt-1">Basal: 2,340 kcal</div>
+          </div>
+
+          <div class="bg-slate-900/90 p-4 rounded-2xl border-2 border-yellow-400/50 shadow-lg">
+            <div class="text-[10px] text-yellow-400 font-bold uppercase tracking-wider">PEAK SPRINT POWER</div>
+            <div class="text-4xl font-black text-yellow-300 font-scoreboard my-1" x-text="wearable.peakPowerWatts + 'W'"></div>
+            <div class="text-[10px] text-slate-300">Avg Power: <strong class="text-white" x-text="wearable.avgPowerWatts + 'W'"></strong></div>
+            <div class="text-[9px] text-amber-300 mt-1">Wingate Anaerobic Burst</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Heart Rate Zones & Recovery Matrix -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Heart Rate Zones Breakdown (7 cols) -->
+        <div class="lg:col-span-7 glass-panel rounded-3xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span>❤️</span> Daily Cardiovascular Heart Rate Zones (Time in Zone)
+              </h3>
+              <p class="text-xs text-slate-400">Total training time distribution during on-ice, off-ice power, and boxing rounds</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-400 block">Resting HR</span>
+              <strong class="text-emerald-400 text-sm font-scoreboard" x-text="wearable.restingHR + ' BPM'"></strong>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <template x-for="hz in wearable.hrZones" :key="hz.zone">
+              <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-slate-200 font-semibold" x-text="hz.zone"></span>
+                  <span class="text-white font-bold" x-text="hz.minutes + ' min (' + hz.pct + '%)'"></span>
+                </div>
+                <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                  <div class="h-full rounded-full transition-all duration-500" :class="hz.color" :style="'width: ' + hz.pct * 2 + '%'"></div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Biometric Recovery Sensors (5 cols) -->
+        <div class="lg:col-span-5 glass-panel rounded-3xl p-6 flex flex-col justify-between space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>🧬</span> Biomarker Kinetics & Recovery Status
+          </h3>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800 text-center">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Heart Rate Var. (HRV)</span>
+              <span class="text-2xl font-black text-emerald-400 font-scoreboard my-1" x-text="wearable.hrvMs + ' ms'"></span>
+              <span class="text-[10px] text-emerald-300 block font-semibold">High Autonomic Recovery</span>
+            </div>
+
+            <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800 text-center">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Blood Oxygen (SpO2)</span>
+              <span class="text-2xl font-black text-sky-400 font-scoreboard my-1" x-text="wearable.spo2Percent + '%'"></span>
+              <span class="text-[10px] text-sky-300 block font-semibold">Optimal Oxygenation</span>
+            </div>
+
+            <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800 text-center">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Sleep Quality Score</span>
+              <span class="text-2xl font-black text-indigo-400 font-scoreboard my-1" x-text="wearable.sleepScore + '/100'"></span>
+              <span class="text-[10px] text-indigo-300 block font-semibold">Deep & Restorative</span>
+            </div>
+
+            <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800 text-center">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">Workload Ratio (ACWR)</span>
+              <span class="text-2xl font-black text-amber-400 font-scoreboard my-1" x-text="wearable.trainingLoadACWR"></span>
+              <span class="text-[10px] text-emerald-300 block font-semibold">Optimal Strain Zone</span>
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-950/70 rounded-2xl border border-sky-500/20 text-xs text-slate-300">
+            <strong class="text-sky-300">Wearable Summary:</strong> Ryker's high HRV (88ms) and superior VO2 max (62.4) indicate prime cardiovascular recovery for intense BWC U18 ice shifts and power forward forechecking.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: BOXING WITH SASHA GIER (60 YO RUSSIAN MASTER COACH - EMBLEM ICON) -->
+    <div x-show="activeTab === 'boxing'" class="space-y-6">
+      <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-red-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-center gap-4 text-center md:text-left">
+            <div class="w-24 h-24 rounded-2xl overflow-hidden border-2 border-red-400 p-2 bg-slate-900 shadow-2xl flex-shrink-0 flex items-center justify-center">
+              <img :src="boxing.coachPhoto" alt="Coach Sasha Gier Emblem" class="w-full h-full object-contain" />
+            </div>
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 text-xs font-bold border border-red-500/40 mb-1">
+                <span>🥊</span> RUSSIAN BOXING SCHOOL & TORQUE POWER
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display">
+                Boxing with Coach Sasha Gier <span class="text-red-400 text-lg sm:text-xl font-tech">(60 Yrs Old • Russian Master)</span>
+              </h2>
+              <p class="text-xs text-slate-300 max-w-2xl">
+                Trained by 60-year-old Russian boxing master Sasha Gier. Focusing on Soviet pendulum footwork, lightning hand speed, heavy bag power transfer, and high-guard defensive dominance.
+              </p>
+            </div>
+          </div>
+
+          <button @click="showAddBoxingModal = true" class="px-4 py-2.5 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition flex items-center gap-2 whitespace-nowrap">
+            <span>➕</span> Log Boxing Session
+          </button>
+        </div>
+
+        <!-- Boxing Metrics Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-800 text-center">
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-red-500/20">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Total Rounds</div>
+            <div class="text-2xl font-black text-red-400 font-scoreboard" x-text="boxing.totalRounds"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Total Sessions</div>
+            <div class="text-2xl font-black text-white font-scoreboard" x-text="boxing.totalSessions"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Active Streak</div>
+            <div class="text-2xl font-black text-amber-400 font-scoreboard" x-text="boxing.streakWeeks + ' Weeks'"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Avg Heart Rate</div>
+            <div class="text-2xl font-black text-emerald-400 font-scoreboard" x-text="boxing.avgHeartRate + ' BPM'"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boxing Sessions List -->
+      <div class="glass-panel rounded-3xl p-6">
+        <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+          <span>📋</span> Sasha Gier's Training Ledger & Corner Advice
+        </h3>
+
+        <div class="space-y-3">
+          <template x-for="session in boxing.sessions" :key="session.id">
+            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-red-500/40 transition">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-red-500/20 text-red-300 border border-red-500/30" x-text="session.focus"></span>
+                  <h4 class="font-bold text-white text-sm" x-text="session.title"></h4>
+                </div>
+                <div class="text-xs text-slate-400">
+                  <span class="text-red-400 font-bold" x-text="session.rounds + ' Rounds'"></span> • 
+                  <span class="text-slate-300 font-medium" x-text="session.duration"></span> • 
+                  <span x-text="session.date"></span>
+                </div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-200">
+                <strong class="text-red-400">Coach Sasha Gier:</strong> <span x-text="session.coachNotes"></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: DAILY LIVE WEBCAM PHOTO FROM WHISTLER (BACK HOME) -->
+    <div x-show="activeTab === 'webcam'" class="space-y-6">
+      <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-amber-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 text-xs font-bold border border-red-500/40 mb-1">
+              <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span> LIVE ALPINE CAMERA FEED • WHISTLER, BC
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display">Whistler Mountain Live Webcam (Back Home)</h2>
+            <p class="text-xs text-slate-300">Live mountain conditions, alpine weather, and views from Ryker's hometown in Whistler, British Columbia</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button @click="refreshWebcam()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs rounded-xl border border-amber-500/30 transition flex items-center gap-1.5">
+              <span>🔄</span> Refresh Snapshot
+            </button>
+          </div>
+        </div>
+
+        <!-- Camera Switcher Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-4 text-xs font-semibold">
+          <template x-for="cam in whistlerWebcam.cams" :key="cam.id">
+            <button @click="switchWebcam(cam.id)" :class="whistlerWebcam.selectedCam === cam.id ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'" class="px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
+              <span>📹</span> <span x-text="cam.name"></span>
+            </button>
+          </template>
+        </div>
+
+        <!-- High-Resolution Live Image Frame -->
+        <div class="relative w-full rounded-3xl overflow-hidden border-2 border-slate-700/80 shadow-2xl bg-slate-950">
+          <img :src="whistlerWebcam.currentPhoto" alt="Whistler Alpine Live Webcam" class="w-full h-auto max-h-[540px] object-cover" />
+
+          <!-- Live Overlay Banner on Video/Image -->
+          <div class="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-slate-700/80 text-xs shadow-lg flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <div>
+              <div class="font-bold text-white" x-text="whistlerWebcam.locationName"></div>
+              <div class="text-[10px] text-slate-400">Elevation: <strong class="text-amber-300" x-text="whistlerWebcam.elevation"></strong></div>
+            </div>
+          </div>
+
+          <div class="absolute bottom-4 right-4 bg-slate-950/85 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-slate-700/80 text-xs shadow-lg text-right">
+            <div class="text-amber-400 font-bold" x-text="whistlerWebcam.temperature + ' • ' + whistlerWebcam.condition"></div>
+            <div class="text-[10px] text-slate-400" x-text="whistlerWebcam.lastUpdated"></div>
+          </div>
+        </div>
+
+        <!-- Whistler Alpine Weather Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 text-center text-xs">
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Alpine Temperature</span>
+            <span class="text-amber-400 font-bold text-base" x-text="whistlerWebcam.temperature"></span>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Sky Visibility</span>
+            <span class="text-sky-300 font-bold text-base">Unlimited (Clear)</span>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Ridge Winds</span>
+            <span class="text-emerald-400 font-bold text-base" x-text="whistlerWebcam.wind"></span>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Hometown Spirit</span>
+            <span class="text-white font-bold text-base">Whistler Born & Bred</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TAB 6: HIKING TRACKER (WHISTLER & SEA-TO-SKY ALPINE) -->
+    <div x-show="activeTab === 'hiking'" class="space-y-6">
+      <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-emerald-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/40 mb-1">
+              <span>🥾</span> ALPINE ENDURANCE & MOUNTAIN SUMMITS
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display">Whistler & BC Hiking Tracker</h2>
+            <p class="text-xs text-slate-300">High-altitude quad conditioning, Garibaldi ridge traverses, and backcountry treks with family</p>
+          </div>
+
+          <button @click="showAddHikeModal = true" class="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition flex items-center gap-2">
+            <span>➕</span> Log Mountain Hike
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-slate-800 text-center">
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-emerald-500/20">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Total Elevation Gained</div>
+            <div class="text-2xl font-black text-emerald-400 font-scoreboard" x-text="hiking.totalElevationM.toLocaleString() + ' m'"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Total Trails Hiked</div>
+            <div class="text-2xl font-black text-white font-scoreboard" x-text="hiking.totalHikes + ' Summits'"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Longest Day Trek</div>
+            <div class="text-2xl font-black text-amber-400 font-scoreboard" x-text="hiking.longestTrekKm + ' km'"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hiking Photo Banner -->
+      <div class="relative h-64 rounded-3xl overflow-hidden border border-slate-700/80 shadow-xl group">
+        <img :src="hiking.heroPhoto" alt="Whistler Alpine Ridge Hike" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent flex items-end p-6">
+          <div>
+            <span class="bg-emerald-500 text-slate-950 font-black text-[10px] uppercase px-2 py-0.5 rounded">Summit Glory</span>
+            <h3 class="text-xl font-black text-white mt-1">Panorama Ridge & Garibaldi Glacial Basin</h3>
+            <p class="text-xs text-slate-300">30.0 km roundtrip • 1,520 meters vertical elevation</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hikes List -->
+      <div class="glass-panel rounded-3xl p-6">
+        <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+          <span>🏔️</span> Completed Alpine Summit Logs
+        </h3>
+
+        <div class="space-y-3">
+          <template x-for="hike in hiking.hikes" :key="hike.id">
+            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 transition">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Alpine Ridge</span>
+                  <h4 class="font-bold text-white text-sm" x-text="hike.trail"></h4>
+                </div>
+                <div class="text-xs text-slate-400">
+                  <span class="text-emerald-400 font-bold" x-text="hike.distance"></span> • 
+                  <span class="text-amber-400 font-semibold" x-text="'+' + hike.elevationM + 'm elev'"></span> • 
+                  <span class="text-slate-300" x-text="hike.duration"></span> • 
+                  <span x-text="hike.date"></span>
+                </div>
+              </div>
+              <div class="text-xs text-slate-300">
+                <span class="text-slate-400">Crew:</span> <strong class="text-white" x-text="hike.companions"></strong> — <span class="italic" x-text="hike.notes"></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: 4X4 DRIVING ADVENTURES (BC BACKCOUNTRY FSR) -->
+    <div x-show="activeTab === '4x4'" class="space-y-6">
+      <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-amber-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/40 mb-1">
+              <span>🚙</span> BC BACKCOUNTRY OVERLAND & FOREST SERVICE ROADS
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display">4x4 Driving Adventure Tracker</h2>
+            <p class="text-xs text-slate-300">Exploring remote Sea-to-Sky mountain valleys, river crossings, rock crawling, and wilderness expeditions</p>
+          </div>
+
+          <button @click="showAdd4x4Modal = true" class="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition flex items-center gap-2">
+            <span>➕</span> Log 4x4 Expedition
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-slate-800 text-center">
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-amber-500/20">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Total Off-Road Mileage</div>
+            <div class="text-2xl font-black text-amber-400 font-scoreboard" x-text="fourByFour.totalOffRoadKm.toLocaleString() + ' km'"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Expeditions</div>
+            <div class="text-2xl font-black text-white font-scoreboard" x-text="fourByFour.expeditions + ' Trips'"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Vehicle Rig Setup</div>
+            <div class="text-xs font-black text-emerald-400 mt-2">35" M/T & Front/Rear Lockers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4x4 Photo Banner -->
+      <div class="relative h-64 rounded-3xl overflow-hidden border border-slate-700/80 shadow-xl group">
+        <img :src="fourByFour.heroPhoto" alt="BC 4x4 Overland Adventure" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent flex items-end p-6">
+          <div>
+            <span class="bg-amber-500 text-slate-950 font-black text-[10px] uppercase px-2 py-0.5 rounded">Expedition Trail</span>
+            <h3 class="text-xl font-black text-white mt-1">Squamish River & Ashlu Glacial Crossing</h3>
+            <p class="text-xs text-slate-300">Technical rock crawling • 4-Low engaged • Deep glacial water fording</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4x4 Expeditions List -->
+      <div class="glass-panel rounded-3xl p-6">
+        <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+          <span>🌲</span> Backcountry 4x4 Trail Logs
+        </h3>
+
+        <div class="space-y-3">
+          <template x-for="adv in fourByFour.adventures" :key="adv.id">
+            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/40 transition">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" x-text="adv.difficulty"></span>
+                  <h4 class="font-bold text-white text-sm" x-text="adv.trail"></h4>
+                </div>
+                <div class="text-xs text-slate-400">
+                  <span class="text-amber-400 font-bold" x-text="adv.distance"></span> • 
+                  <span class="text-emerald-400 font-semibold" x-text="adv.4wdMode"></span> • 
+                  <span x-text="adv.date"></span>
+                </div>
+              </div>
+              <div class="text-xs text-slate-300">
+                <span class="text-slate-400">Companions:</span> <strong class="text-white" x-text="adv.companions"></strong> — <span class="italic" x-text="adv.notes"></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 8: FISHING TRACKER -->
+    <div x-show="activeTab === 'fishing'" class="space-y-6">
+      <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-cyan-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold border border-cyan-500/40 mb-1">
+              <span>🎣</span> BC RIVERS & WHISTLER LAKES ANGLER LOG
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display">Ryker's Fishing Tracker</h2>
+            <p class="text-xs text-slate-300">Tracking salmon runs, trophy trout, river spots, and weekend adventures with the Carson family</p>
+          </div>
+
+          <button @click="showAddFishingModal = true" class="px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition flex items-center gap-2">
+            <span>➕</span> Log New Catch
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-slate-800 text-center">
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-cyan-500/20">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Total Catches</div>
+            <div class="text-2xl font-black text-cyan-400 font-scoreboard" x-text="fishing.totalCatches"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Personal Best</div>
+            <div class="text-lg font-black text-amber-400 font-scoreboard mt-1" x-text="fishing.personalBest"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Days on Water</div>
+            <div class="text-2xl font-black text-emerald-400 font-scoreboard" x-text="fishing.daysOnWater + ' Days'"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catches Table -->
+      <div class="glass-panel rounded-3xl p-6">
+        <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+          <span>🐟</span> Catch History & Tackle Details
+        </h3>
+
+        <div class="space-y-3">
+          <template x-for="item in fishing.catches" :key="item.id">
+            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-cyan-500/40 transition">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30" x-text="item.species"></span>
+                  <span class="text-xs text-emerald-400 font-bold" x-text="item.weight + ' • ' + item.length"></span>
+                  <span class="text-xs text-slate-400">@ <strong class="text-white" x-text="item.location"></strong></span>
+                </div>
+                <div class="text-xs text-slate-400">
+                  <span :class="item.result.includes('Released') ? 'text-sky-400' : 'text-amber-400'" class="font-bold" x-text="item.result"></span> • 
+                  <span x-text="item.date"></span>
+                </div>
+              </div>
+              <div class="text-xs text-slate-300">
+                <span class="text-slate-400">Tackle/Lure:</span> <strong class="text-white" x-text="item.tackle"></strong> — <span class="italic" x-text="item.notes"></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 9: ONEWHEEL TRAILS -->
+    <div x-show="activeTab === 'onewheel'" class="space-y-6">
+      <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-emerald-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/40 mb-1">
+              <span>🛹</span> WHISTLER & LOWER MAINLAND FLOAT LOG
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display">Onewheeling Adventure Tracker</h2>
+            <p class="text-xs text-slate-300">Trail carving, high-speed flow rides, and balance cross-training for hockey agility</p>
+          </div>
+
+          <button @click="showAddOnewheelModal = true" class="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition flex items-center gap-2">
+            <span>➕</span> Log Onewheel Ride
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-800 text-center">
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-emerald-500/20">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Total Odometer</div>
+            <div class="text-2xl font-black text-emerald-400 font-scoreboard" x-text="onewheel.odometerKm + ' km'"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Top Speed Record</div>
+            <div class="text-2xl font-black text-amber-400 font-scoreboard" x-text="onewheel.topSpeedKmh + ' km/h'"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Float Sessions</div>
+            <div class="text-2xl font-black text-white font-scoreboard" x-text="onewheel.totalRides"></div>
+          </div>
+          <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Battery Health</div>
+            <div class="text-2xl font-black text-sky-400 font-scoreboard" x-text="onewheel.batteryHealth"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rides List -->
+      <div class="glass-panel rounded-3xl p-6">
+        <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+          <span>🌲</span> Trail Rides & Float Sessions
+        </h3>
+
+        <div class="space-y-3">
+          <template x-for="ride in onewheel.rides" :key="ride.id">
+            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 transition">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" x-text="ride.terrain"></span>
+                  <h4 class="font-bold text-white text-sm" x-text="ride.route"></h4>
+                </div>
+                <div class="text-xs text-slate-400">
+                  <span class="text-emerald-400 font-bold" x-text="ride.distance"></span> • 
+                  <span class="text-amber-400 font-semibold" x-text="'Top: ' + ride.topSpeed"></span> • 
+                  <span x-text="ride.duration"></span> • 
+                  <span x-text="ride.date"></span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-300 italic" x-text="ride.notes"></p>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <!-- TAB 10: PUSHUP RIVALRY VS DAD -->
+    <div x-show="activeTab === 'pushups'" class="space-y-6">
+      <div class="glass-panel-gold rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2 text-center md:text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold">
+              <span>🏆</span> THE CARSON FAMILY PUSHUP CUP
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-display">
+              Ryker #23 <span class="text-amber-400">vs.</span> Dad Showdown
+            </h2>
+            <p class="text-xs sm:text-sm text-amber-200/90 max-w-xl">
+              Daily head-to-head pushup competition. Proper form only, chest to the carpet, no excuses!
+            </p>
+          </div>
+
+          <div class="bg-slate-950/80 p-4 rounded-2xl border-2 border-amber-400 text-center min-w-[220px] shadow-2xl float-animation">
+            <div class="text-3xl mb-1">🥇</div>
+            <div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Current Leader Today</div>
+            <div class="text-xl font-extrabold text-amber-400 font-display" x-text="pushupLeaderToday === 'ryker' ? 'Ryker Crosby Carson (#23)' : (pushupLeaderToday === 'dad' ? 'Dad (The Veteran)' : 'DEAD TIE!')"></div>
+            <div class="text-xs text-emerald-400 font-semibold mt-1" x-text="pushupLeaderToday === 'tie' ? 'All Tied Up!' : '+' + pushupLeaderDiff + ' pushup lead'"></div>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 bg-slate-950/80 rounded-2xl border border-amber-400/30 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🔥</span>
+            <div>
+              <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block font-tech">Locker Room Banter</span>
+              <p class="text-xs sm:text-sm text-slate-200 italic" x-text="currentBanter"></p>
+            </div>
+          </div>
+          <button @click="updateBanter()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-semibold whitespace-nowrap transition">
+            🎲 New Quote
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <!-- RYKER ARENA -->
+          <div class="bg-slate-900/90 rounded-2xl p-6 border-2 border-amber-500/50 relative overflow-hidden flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-md">
+                  <img :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
+                </div>
+                <div>
+                  <div class="text-xs text-amber-400 font-bold uppercase">The Prospect</div>
+                  <h3 class="text-xl font-black text-white font-display">Ryker Crosby Carson</h3>
+                  <div class="text-xs text-slate-400">BWC #23 • 17 Years Old</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs text-amber-400 font-semibold">Streak</span>
+                <div class="text-lg font-black text-white" x-text="pushups.streakRyker + ' Days'"></div>
+              </div>
+            </div>
+
+            <div class="my-6 text-center bg-slate-950/60 p-4 rounded-xl border border-amber-500/20">
+              <div class="text-xs text-slate-400 font-bold uppercase tracking-widest">Today's Pushups</div>
+              <div class="text-6xl font-black text-amber-400 font-scoreboard my-1" x-text="pushups.todayRyker"></div>
+              <div class="text-xs text-slate-400">Weekly Total: <strong class="text-white" x-text="pushups.weekRyker"></strong> • All-Time: <strong class="text-amber-300" x-text="pushups.allTimeRyker"></strong></div>
+            </div>
+
+            <div>
+              <div class="text-xs text-slate-400 font-semibold mb-2">Log Ryker's Reps:</div>
+              <div class="grid grid-cols-4 gap-2">
+                <button @click="addPushups('ryker', 10)" class="py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm rounded-xl shadow transition">+10</button>
+                <button @click="addPushups('ryker', 25)" class="py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm rounded-xl shadow transition">+25</button>
+                <button @click="addPushups('ryker', 50)" class="py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm rounded-xl shadow transition">+50</button>
+                <button @click="addPushups('ryker', 100)" class="py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black text-sm rounded-xl shadow transition">+100</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- DAD ARENA -->
+          <div class="bg-slate-900/90 rounded-2xl p-6 border-2 border-sky-500/50 relative overflow-hidden flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-sky-400 shadow-md">
+                  <img src="assets/images/dad.jpg" alt="Dad" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <div class="text-xs text-sky-400 font-bold uppercase">The Challenger</div>
+                  <h3 class="text-xl font-black text-white font-display">Dad</h3>
+                  <div class="text-xs text-slate-400">Home Head Coach • Rink Veteran</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs text-sky-400 font-semibold">Streak</span>
+                <div class="text-lg font-black text-white" x-text="pushups.streakDad + ' Days'"></div>
+              </div>
+            </div>
+
+            <div class="my-6 text-center bg-slate-950/60 p-4 rounded-xl border border-sky-500/20">
+              <div class="text-xs text-slate-400 font-bold uppercase tracking-widest">Today's Pushups</div>
+              <div class="text-6xl font-black text-sky-400 font-scoreboard my-1" x-text="pushups.todayDad"></div>
+              <div class="text-xs text-slate-400">Weekly Total: <strong class="text-white" x-text="pushups.weekDad"></strong> • All-Time: <strong class="text-sky-300" x-text="pushups.allTimeDad"></strong></div>
+            </div>
+
+            <div>
+              <div class="text-xs text-slate-400 font-semibold mb-2">Log Dad's Reps:</div>
+              <div class="grid grid-cols-4 gap-2">
+                <button @click="addPushups('dad', 10)" class="py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-sm rounded-xl shadow transition">+10</button>
+                <button @click="addPushups('dad', 25)" class="py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-sm rounded-xl shadow transition">+25</button>
+                <button @click="addPushups('dad', 50)" class="py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-sm rounded-xl shadow transition">+50</button>
+                <button @click="addPushups('dad', 100)" class="py-2.5 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 text-slate-950 font-black text-sm rounded-xl shadow transition">+100</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel rounded-3xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>📊</span> Daily Pushup Duel History (Last 14 Days)
+            </h3>
+            <p class="text-xs text-slate-400">Day-by-day comparison between Ryker and Dad</p>
+          </div>
+          <span class="text-xs text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30 font-semibold">Gold = Ryker | Blue = Dad</span>
+        </div>
+
+        <div class="relative h-64 w-full">
+          <canvas id="pushupDuelChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 11: CARSON FAMILY & FAN CLUB HQ -->
+    <div x-show="activeTab === 'family'" class="space-y-6">
+      <div class="glass-panel-gold rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold mb-2">
+              <span>❤️</span> THE CARSON FAMILY & RINK CREW
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-display">
+              Ryker's Biggest Fans & Support Team
+            </h2>
+            <p class="text-xs sm:text-sm text-amber-200/90 max-w-2xl mt-1">
+              From early morning rink drives to pre-game nutrition, live cheering, pushup rivalry, boxing rounds with Sasha Gier, and locker room mascot cats — this is the squad behind #23!
+            </p>
+          </div>
+          <button @click="showAddCheerModal = true" class="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition flex items-center gap-2 whitespace-nowrap">
+            <span>📢</span> Post Cheer Message
+          </button>
+        </div>
+      </div>
+
+      <!-- 9-Card Family, Coach & Cats Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <template x-for="member in family" :key="member.id">
+          <div class="glass-panel rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between hover:border-amber-400/50 transition group">
+            <div class="text-center">
+              <div class="relative w-24 h-24 mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-xl p-0.5 bg-slate-900 group-hover:scale-105 transition duration-300 flex items-center justify-center">
+                <img :src="member.photo" :alt="member.name" class="w-full h-full object-cover" :class="member.id === 'sasha_gier' ? 'p-2 object-contain' : 'object-cover'" />
+              </div>
+
+              <div class="mt-3">
+                <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase" x-text="member.tag"></span>
+                <h3 class="text-lg font-extrabold text-white mt-1" x-text="member.name"></h3>
+                <p class="text-xs text-slate-400 font-medium" x-text="member.role"></p>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-800/80">
+              <p class="text-xs text-slate-300 italic mb-3 text-center" x-text="'“' + member.quote + '”'"></p>
+
+              <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-800/50">
+                <span class="text-[11px] text-slate-400" x-text="'🏒 ' + member.attendance"></span>
+                <button @click="cheerFamilyMember(member)" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition flex items-center gap-1 shadow">
+                  <span>🙌</span> <span x-text="member.cheersCount"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Cheer Wall -->
+      <div class="glass-panel rounded-3xl p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>💬</span> Game Day Cheer Wall & Family Shoutouts
+            </h3>
+            <p class="text-xs text-slate-400">Live motivational board from the Carson family & crew</p>
+          </div>
+          <button @click="showAddCheerModal = true" class="text-xs text-amber-400 font-bold hover:underline">
+            + Write a Message
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <template x-for="item in cheerWall" :key="item.id">
+            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex gap-3 hover:border-amber-400/40 transition">
+              <div class="w-12 h-12 rounded-xl overflow-hidden border border-amber-400/40 flex-shrink-0 flex items-center justify-center bg-slate-950">
+                <img :src="item.avatar" :alt="item.author" class="w-full h-full object-cover" :class="item.author === 'Sasha Gier' ? 'p-1.5 object-contain' : 'object-cover'" />
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-bold text-amber-300 text-xs" x-text="item.author"></span>
+                  <span class="text-[10px] text-slate-500" x-text="item.time"></span>
+                </div>
+                <p class="text-xs text-slate-200" x-text="item.message"></p>
+                <div class="mt-2 flex justify-end">
+                  <button @click="likeCheer(item)" class="text-[11px] text-slate-400 hover:text-amber-400 flex items-center gap-1 transition">
+                    <span>❤️</span> <span x-text="item.likes"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 12: NHL DRAFT SCOUTING REPORT -->
+    <div x-show="activeTab === 'scouting'" class="space-y-6">
+      <div class="glass-panel rounded-3xl p-6 sm:p-8">
+        
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-800">
+          <div class="flex items-center gap-4 text-center md:text-left">
+            <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-amber-400 p-0.5 bg-slate-900 shadow-xl">
+              <img :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-amber-400 uppercase font-tech">NHL Central Scouting Profile</span>
+                <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/40">Grade: A Prospect</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-display">Ryker Crosby Carson #23</h2>
+              <div class="text-xs text-slate-300">Burnaby Winter Club (BWC Academy) • 6'1" / 188 lbs • Center / RW (Shoots R)</div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+              <span>🖨️</span> Print / Export Card
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
+          <div class="lg:col-span-6 bg-slate-950/60 p-5 rounded-2xl border border-amber-500/20 flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-sm font-bold text-amber-400 uppercase font-tech">7-Attribute Prospect Radar</h3>
+              <span class="text-xs text-slate-400">NHL Elite Scale (100 Max)</span>
+            </div>
+
+            <div class="relative h-72 w-full">
+              <canvas id="scoutingRadarChart"></canvas>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 space-y-4">
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+              <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 font-tech">Scout Evaluation Summary</h4>
+              <p class="text-xs text-slate-200 leading-relaxed">
+                "Ryker is a physically commanding two-way forward with exceptional hockey sense and a lethal release from the high-danger slot. Combines heavy physical play with high-end playmaking finesse. Cross-trains with 60yo Russian boxing master Sasha Gier, high-altitude Whistler mountain ascents, and high-intensity pushup conditioning with Dad."
+              </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                <span class="text-amber-400 font-bold block mb-1">Key Strengths</span>
+                <ul class="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                  <li>Quick-release wrist shot</li>
+                  <li>VO2 Max 62.4 & Anaerobic stamina</li>
+                  <li>Hand speed & boxing torque (Sasha Gier)</li>
+                  <li>High-IQ play distribution</li>
+                </ul>
+              </div>
+
+              <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                <span class="text-sky-400 font-bold block mb-1">Development Goals</span>
+                <ul class="text-slate-300 space-y-1 text-[11px] list-disc list-inside">
+                  <li>First-step acceleration</li>
+                  <li>Penalty kill shot blocking</li>
+                  <li>Rotational core strength</li>
+                  <li>Pushup duel supremacy vs Dad</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-amber-500/30 flex items-center justify-between text-xs">
+              <div>
+                <span class="text-slate-400 block text-[10px]">NHL Player Comparable</span>
+                <span class="font-bold text-amber-300 text-sm">Sidney Crosby / Matthew Tkachuk</span>
+              </div>
+              <div class="text-right">
+                <span class="text-slate-400 block text-[10px]">Draft Projection</span>
+                <span class="font-bold text-emerald-400 text-sm">Tier 1 Top-15 Prospect</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-12 py-6 border-t border-slate-800/80 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-4">
+      <div class="flex items-center gap-2">
+        <img :src="player.bwcLogo" class="w-5 h-5 inline-block" alt="BWC" />
+        <span>Burnaby Winter Club Academy • Ryker Crosby Carson #23 Hockey Pro Dashboard</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <button @click="resetToDefault()" class="hover:text-rose-400 transition">Reset Default Stats</button>
+        <span>•</span>
+        <span>Family Supporters: Mom, Dad, Brillianna, Aurora, Matthison, Sasha Gier & Cats Mau, Atom, Jax</span>
+      </div>
+    </footer>
+  </div>
+  <!-- ALL MODALS -->
+  <!-- MODAL 1: ADD GAME STATS -->
+  <div x-show="showAddGameModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div @click.away="showAddGameModal = false" class="glass-panel-gold rounded-3xl p-6 sm:p-8 max-w-lg w-full border-2 border-amber-500/50 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>🏒</span> Log New Game Performance
+        </h3>
+        <button @click="showAddGameModal = false" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <form @submit.prevent="submitGame()" class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Game Date</label>
+            <input type="date" x-model="newGame.date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Opponent Team</label>
+            <input type="text" placeholder="e.g. Delta Academy" x-model="newGame.opponent" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Game Result</label>
+            <input type="text" placeholder="W 5-2" x-model="newGame.result" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Game Honors / Star</label>
+            <select x-model="newGame.stars" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white">
+              <option value="1st Star">1st Star ★★★</option>
+              <option value="2nd Star">2nd Star ★★</option>
+              <option value="3rd Star">3rd Star ★</option>
+              <option value="Unsung Hero">Unsung Hero</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2.5 pt-1">
+          <div>
+            <label class="block text-amber-400 font-bold mb-1">Goals (G)</label>
+            <input type="number" min="0" x-model="newGame.goals" class="w-full bg-slate-900 border border-amber-500/40 rounded-xl p-2 text-center text-amber-400 font-bold text-sm" />
+          </div>
+          <div>
+            <label class="block text-sky-400 font-bold mb-1">Assists (A)</label>
+            <input type="number" min="0" x-model="newGame.assists" class="w-full bg-slate-900 border border-sky-500/40 rounded-xl p-2 text-center text-sky-400 font-bold text-sm" />
+          </div>
+          <div>
+            <label class="block text-rose-400 font-bold mb-1">Hits</label>
+            <input type="number" min="0" x-model="newGame.hits" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-rose-400 font-bold text-sm" />
+          </div>
+          <div>
+            <label class="block text-emerald-400 font-bold mb-1">+/-</label>
+            <input type="number" x-model="newGame.plusMinus" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-emerald-400 font-bold text-sm" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Shots (SOG)</label>
+            <input type="number" min="0" x-model="newGame.sog" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-white" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">PIM</label>
+            <input type="number" min="0" x-model="newGame.pim" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-white" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">TOI (Ice Time)</label>
+            <input type="text" placeholder="21:45" x-model="newGame.toi" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-white" />
+          </div>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" @click="showAddGameModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl shadow-lg transition">Save Game & Light Horn</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADD SHOT TO RINK -->
+  <div x-show="showAddShotModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div @click.away="showAddShotModal = false" class="glass-panel rounded-3xl p-6 sm:p-8 max-w-md w-full border border-sky-500/40 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>🎯</span> Log Shot on Ice Rink
+        </h3>
+        <button @click="showAddShotModal = false" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <form @submit.prevent="submitShot()" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Shot Result</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" @click="newShot.result = 'goal'" :class="newShot.result === 'goal' ? 'bg-amber-500 text-slate-950 font-black' : 'bg-slate-900 text-slate-300 border border-slate-700'" class="py-2 rounded-xl transition">★ GOAL</button>
+            <button type="button" @click="newShot.result = 'save'" :class="newShot.result === 'save' ? 'bg-sky-500 text-slate-950 font-black' : 'bg-slate-900 text-slate-300 border border-slate-700'" class="py-2 rounded-xl transition">Saved (SOG)</button>
+            <button type="button" @click="newShot.result = 'miss'" :class="newShot.result === 'miss' ? 'bg-slate-600 text-white font-black' : 'bg-slate-900 text-slate-300 border border-slate-700'" class="py-2 rounded-xl transition">Missed / Block</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Shot Release Type</label>
+            <select x-model="newShot.type" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white">
+              <option value="Wrist Shot">Wrist Shot</option>
+              <option value="Snap Shot">Snap Shot</option>
+              <option value="Slap Shot">Slap Shot (One-Timer)</option>
+              <option value="Backhand">Backhand</option>
+              <option value="Tip / Deflection">Tip / Deflection</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Period</label>
+            <select x-model="newShot.period" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white">
+              <option value="1">1st Period</option>
+              <option value="2">2nd Period</option>
+              <option value="3">3rd Period</option>
+              <option value="OT">Overtime</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Game Time</label>
+            <input type="text" placeholder="14:22" x-model="newShot.time" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Opponent</label>
+            <input type="text" placeholder="Delta Academy" x-model="newShot.opponent" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+          </div>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" @click="showAddShotModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black rounded-xl shadow-lg transition">Plot Shot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: ADD BOXING SESSION (SASHA GIER) -->
+  <div x-show="showAddBoxingModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div @click.away="showAddBoxingModal = false" class="glass-panel rounded-3xl p-6 sm:p-8 max-w-md w-full border border-red-500/50 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>🥊</span> Log Boxing Session with Sasha Gier
+        </h3>
+        <button @click="showAddBoxingModal = false" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <form @submit.prevent="submitBoxing()" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Session Title / Focus</label>
+          <input type="text" placeholder="e.g. Soviet Pendulum Step & 1-2 Hook" x-model="newBoxing.title" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Rounds</label>
+            <input type="number" min="1" max="15" x-model="newBoxing.rounds" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-red-400 font-bold text-sm" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Duration</label>
+            <input type="text" placeholder="45 min" x-model="newBoxing.duration" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-white" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Category</label>
+            <select x-model="newBoxing.focus" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-white">
+              <option value="Soviet Mitts & Footwork">Soviet Mitts</option>
+              <option value="Sparring / Defense">Sparring</option>
+              <option value="Heavy Bag Power">Heavy Bag</option>
+              <option value="Body Shot Counters">Body Shots</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Coach Sasha Gier's Corner Advice</label>
+          <textarea rows="3" placeholder="Sasha noted: Snap the jab from the chin, fast reset to high guard..." x-model="newBoxing.coachNotes" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white"></textarea>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" @click="showAddBoxingModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-red-500 hover:bg-red-400 text-slate-950 font-black rounded-xl shadow-lg transition">Save Boxing Round</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: ADD HIKING TREK -->
+  <div x-show="showAddHikeModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div @click.away="showAddHikeModal = false" class="glass-panel rounded-3xl p-6 sm:p-8 max-w-md w-full border border-emerald-500/50 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>🥾</span> Log Whistler / BC Alpine Hike
+        </h3>
+        <button @click="showAddHikeModal = false" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <form @submit.prevent="submitHike()" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Trail Name</label>
+          <input type="text" placeholder="e.g. Black Tusk Summit / High Note Trail" x-model="newHike.trail" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Distance (km)</label>
+            <input type="number" step="0.5" placeholder="18.0" x-model="newHike.distance" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-emerald-400 font-bold" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Elevation (m)</label>
+            <input type="number" placeholder="950" x-model="newHike.elevationM" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-amber-400 font-bold" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Duration</label>
+            <input type="text" placeholder="5h 30m" x-model="newHike.duration" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-white" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Companions & Notes</label>
+          <textarea rows="2" placeholder="Hiked with Dad & Aurora, sunny alpine ridge..." x-model="newHike.notes" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white"></textarea>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" @click="showAddHikeModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl shadow-lg transition">Save Summit Log</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: ADD 4X4 EXPEDITION -->
+  <div x-show="showAdd4x4Modal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div @click.away="showAdd4x4Modal = false" class="glass-panel rounded-3xl p-6 sm:p-8 max-w-md w-full border border-amber-500/50 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>🚙</span> Log 4x4 Backcountry Expedition
+        </h3>
+        <button @click="showAdd4x4Modal = false" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <form @submit.prevent="submit4x4()" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Trail / FSR Route</label>
+          <input type="text" placeholder="e.g. Callaghan Valley & Alexander Falls FSR" x-model="new4x4.trail" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Distance (km)</label>
+            <input type="number" placeholder="50" x-model="new4x4.distance" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-amber-400 font-bold" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Difficulty</label>
+            <select x-model="new4x4.difficulty" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-white">
+              <option value="Moderate FSR">Moderate FSR</option>
+              <option value="Technical Rocks">Rock Crawling</option>
+              <option value="River Fording">River Fording</option>
+              <option value="Alpine Pass">Alpine Pass</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">4WD Mode</label>
+            <select x-model="new4x4.4wdMode" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-white">
+              <option value="4-High">4-High</option>
+              <option value="4-Low">4-Low</option>
+              <option value="4-Low Locked">4-Low Locked</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Expedition Notes</label>
+          <textarea rows="2" placeholder="Deep river crossing, flawless traction on 35s..." x-model="new4x4.notes" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white"></textarea>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" @click="showAdd4x4Modal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl shadow-lg transition">Save 4x4 Log</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 6: ADD FISHING CATCH -->
+  <div x-show="showAddFishingModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div @click.away="showAddFishingModal = false" class="glass-panel rounded-3xl p-6 sm:p-8 max-w-md w-full border border-cyan-500/50 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>🎣</span> Log Fishing Catch
+        </h3>
+        <button @click="showAddFishingModal = false" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <form @submit.prevent="submitFishing()" class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Species</label>
+            <select x-model="newFishing.species" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white">
+              <option value="Coho Salmon">Coho Salmon</option>
+              <option value="Chinook (King) Salmon">Chinook (King) Salmon</option>
+              <option value="Rainbow Trout">Rainbow Trout</option>
+              <option value="Bull Trout">Bull Trout</option>
+              <option value="Cutthroat Trout">Cutthroat Trout</option>
+              <option value="Steelhead">Steelhead</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Location</label>
+            <input type="text" placeholder="e.g. Cheakamus River" x-model="newFishing.location" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Weight</label>
+            <input type="text" placeholder="14.5 lbs" x-model="newFishing.weight" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-cyan-400 font-bold" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Length</label>
+            <input type="text" placeholder="28 inches" x-model="newFishing.length" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-white" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Outcome</label>
+            <select x-model="newFishing.result" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-white">
+              <option value="Released">Released 💧</option>
+              <option value="Kept for Dinner">Kept (Dinner) 🍽️</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Lure / Tackle & Notes</label>
+          <input type="text" placeholder="Blue Fox Vibrax #4 Silver, early morning pool..." x-model="newFishing.notes" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" @click="showAddFishingModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black rounded-xl shadow-lg transition">Save Catch</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 7: ADD ONEWHEEL RIDE -->
+  <div x-show="showAddOnewheelModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div @click.away="showAddOnewheelModal = false" class="glass-panel rounded-3xl p-6 sm:p-8 max-w-md w-full border border-emerald-500/50 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>🛹</span> Log Onewheel Float Adventure
+        </h3>
+        <button @click="showAddOnewheelModal = false" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <form @submit.prevent="submitOnewheel()" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Trail / Route Name</label>
+          <input type="text" placeholder="e.g. Whistler Valley Trail & Lost Lake" x-model="newOnewheel.route" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Distance (km)</label>
+            <input type="number" step="0.1" placeholder="15.5" x-model="newOnewheel.distance" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-emerald-400 font-bold" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Top Speed</label>
+            <input type="text" placeholder="32.5 km/h" x-model="newOnewheel.topSpeed" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-center text-amber-400 font-bold" />
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Terrain</label>
+            <select x-model="newOnewheel.terrain" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-white">
+              <option value="Valley Trail">Valley Trail</option>
+              <option value="Dirt Singletrack">Dirt Trails</option>
+              <option value="Urban Street Carve">Urban Street</option>
+              <option value="Mountain Paths">Mountain Path</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Adventure Notes</label>
+          <textarea rows="2" placeholder="Smooth flow, deep carving through the trees, great edge training..." x-model="newOnewheel.notes" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white"></textarea>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" @click="showAddOnewheelModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl shadow-lg transition">Save Float Ride</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 8: ADD CHEER MESSAGE -->
+  <div x-show="showAddCheerModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div @click.away="showAddCheerModal = false" class="glass-panel-gold rounded-3xl p-6 sm:p-8 max-w-md w-full border-2 border-amber-500/50 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>📢</span> Leave a Cheer for Ryker #23
+        </h3>
+        <button @click="showAddCheerModal = false" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <form @submit.prevent="submitCheer()" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Who is Cheerleader?</label>
+          <select x-model="newCheer.author" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white">
+            <template x-for="f in family" :key="f.id">
+              <option :value="f.name" x-text="f.name + ' (' + f.role + ')'"></option>
+            </template>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">Cheer Message</label>
+          <textarea rows="3" placeholder="Bring home the W tonight Ryker! Light the lamp! 🏒" x-model="newCheer.message" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white"></textarea>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" @click="showAddCheerModal = false" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl shadow-lg transition">Post & Throw Confetti 🎉</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
