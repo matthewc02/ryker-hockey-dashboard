@@ -365,6 +365,11 @@ function hockeyApp() {
       return Math.abs(this.pushups.todayRyker - this.pushups.todayDad);
     },
 
+    formatNum(val) {
+      if (val === undefined || val === null) return '0';
+      return Number(val || 0).toLocaleString();
+    },
+
     // Init function
     initApp() {
       this.loadStorage();

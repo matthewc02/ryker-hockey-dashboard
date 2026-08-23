@@ -77,7 +77,7 @@
           <!-- Player Photo Frame with Upload Option -->
           <div class="relative group">
             <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border-2 border-amber-400 p-1 bg-slate-900 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-              <img :src="player.avatar" alt="Ryker Crosby Carson" class="w-full h-full object-cover object-top rounded-xl group-hover:scale-105 transition duration-300" />
+              <img src="assets/images/ryker.jpg" :src="player.avatar" alt="Ryker Crosby Carson" class="w-full h-full object-cover object-top rounded-xl group-hover:scale-105 transition duration-300" />
             </div>
             
             <label class="absolute inset-0 rounded-2xl bg-slate-950/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-[10px] font-bold text-amber-300 cursor-pointer transition">
@@ -110,7 +110,7 @@
 
             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs sm:text-sm text-slate-300 font-medium">
               <span class="flex items-center gap-1 text-amber-400 font-bold">
-                <img :src="player.bwcLogo" class="w-4 h-4 inline-block" alt="BWC" /> Burnaby Winter Club
+                <img src="assets/images/bwc_logo.svg" :src="player.bwcLogo" class="w-4 h-4 inline-block" alt="BWC" /> Burnaby Winter Club
               </span>
               <span>•</span>
               <span>Forward (Center / RW)</span>
@@ -132,7 +132,7 @@
         <div class="flex flex-col items-center lg:items-end gap-3 w-full lg:w-auto">
           <div class="hidden sm:flex items-center gap-3 bg-slate-900/80 px-4 py-2 rounded-2xl border border-amber-500/20">
             <div class="w-10 h-10">
-              <img :src="player.bwcLogo" alt="Burnaby Winter Club" class="w-full h-full" />
+              <img src="assets/images/bwc_logo.svg" :src="player.bwcLogo" alt="Burnaby Winter Club" class="w-full h-full" />
             </div>
             <div>
               <div class="text-xs font-black tracking-wider text-amber-400 font-tech">BURNABY WINTER CLUB</div>
@@ -279,7 +279,7 @@
             </div>
             <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
               <div class="text-[9px] text-slate-400 uppercase font-bold">STEPS</div>
-              <div class="text-lg font-black text-sky-400 font-scoreboard" x-text="wearable.dailySteps.toLocaleString()"></div>
+              <div class="text-lg font-black text-sky-400 font-scoreboard" x-text="formatNum(wearable ? wearable.dailySteps : 18450)"></div>
               <div class="text-[9px] text-slate-400">15k Goal</div>
             </div>
             <div class="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
@@ -316,7 +316,7 @@
           </div>
 
           <div class="relative h-28 w-full rounded-2xl overflow-hidden border border-slate-700/80 shadow-md group">
-            <img :src="whistlerWebcam.currentPhoto" alt="Whistler Live" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <img src="assets/images/whistler_webcam.jpg" :src="whistlerWebcam.currentPhoto" alt="Whistler Live" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
             <div class="absolute bottom-1.5 left-2 bg-slate-950/80 px-2 py-0.5 rounded-md text-[10px] text-white font-bold flex items-center gap-2 border border-slate-700">
               <span x-text="whistlerWebcam.locationName"></span>
               <span>•</span>
@@ -352,7 +352,7 @@
             <!-- Ryker Side -->
             <div class="bg-slate-900/80 p-4 rounded-2xl border border-amber-400/40 text-center relative">
               <div class="w-14 h-14 rounded-full overflow-hidden mx-auto border-2 border-amber-400 mb-2">
-                <img :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
+                <img src="assets/images/ryker.jpg" :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
               </div>
               <div class="font-bold text-xs text-amber-300">Ryker #23</div>
               <div class="text-3xl font-black text-amber-400 font-scoreboard my-1" x-text="pushups.todayRyker"></div>
@@ -456,7 +456,7 @@
                 <p class="text-[10px] text-slate-400">Garibaldi & Alpine Peaks</p>
               </div>
             </div>
-            <span class="text-xs bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full" x-text="hiking.totalElevationM.toLocaleString() + 'm Elev'"></span>
+            <span class="text-xs bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full" x-text="formatNum(hiking ? hiking.totalElevationM : 14850) + 'm Elev'"></span>
           </div>
           <div class="text-xs text-slate-300 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
             <strong class="text-emerald-300">Longest:</strong> Panorama Ridge (30 km)
@@ -589,7 +589,7 @@
                   <td class="p-3.5 text-slate-400 whitespace-nowrap" x-text="game.date"></td>
                   <td class="p-3.5 text-white font-bold whitespace-nowrap" x-text="game.opponent"></td>
                   <td class="p-3.5 whitespace-nowrap">
-                    <span :class="game.result.startsWith('W') ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'" class="px-2 py-0.5 rounded text-[11px] font-bold" x-text="game.result"></span>
+                    <span :class="(game.result || '').includes('W') ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'" class="px-2 py-0.5 rounded text-[11px] font-bold" x-text="game.result"></span>
                   </td>
                   <td class="p-3.5 text-center font-bold text-amber-400 text-sm" x-text="game.goals"></td>
                   <td class="p-3.5 text-center font-bold text-sky-400 text-sm" x-text="game.assists"></td>
@@ -641,7 +641,7 @@
 
           <div class="bg-slate-900/90 p-4 rounded-2xl border-2 border-sky-400/50 shadow-lg">
             <div class="text-[10px] text-sky-400 font-bold uppercase tracking-wider">DAILY STEPS</div>
-            <div class="text-4xl font-black text-sky-300 font-scoreboard my-1" x-text="wearable.dailySteps.toLocaleString()"></div>
+            <div class="text-4xl font-black text-sky-300 font-scoreboard my-1" x-text="formatNum(wearable ? wearable.dailySteps : 18450)"></div>
             <div class="text-[10px] text-slate-300">Target: 15,000 Steps</div>
             <div class="text-[9px] text-emerald-400 mt-1">123% of Daily Goal Completed</div>
           </div>
@@ -740,7 +740,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
           <div class="flex items-center gap-4 text-center md:text-left">
             <div class="w-24 h-24 rounded-2xl overflow-hidden border-2 border-red-400 p-2 bg-slate-900 shadow-2xl flex-shrink-0 flex items-center justify-center">
-              <img :src="boxing.coachPhoto" alt="Coach Sasha Gier Emblem" class="w-full h-full object-contain" />
+              <img src="assets/images/boxing_glove.svg" :src="boxing.coachPhoto" alt="Coach Sasha Gier Emblem" class="w-full h-full object-contain" />
             </div>
             <div>
               <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 text-xs font-bold border border-red-500/40 mb-1">
@@ -840,7 +840,7 @@
 
         <!-- High-Resolution Live Image Frame -->
         <div class="relative w-full rounded-3xl overflow-hidden border-2 border-slate-700/80 shadow-2xl bg-slate-950">
-          <img :src="whistlerWebcam.currentPhoto" alt="Whistler Alpine Live Webcam" class="w-full h-auto max-h-[540px] object-cover" />
+          <img src="assets/images/whistler_webcam.jpg" :src="whistlerWebcam.currentPhoto" alt="Whistler Alpine Live Webcam" class="w-full h-auto max-h-[540px] object-cover" />
 
           <!-- Live Overlay Banner on Video/Image -->
           <div class="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-slate-700/80 text-xs shadow-lg flex items-center gap-3">
@@ -898,7 +898,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-slate-800 text-center">
           <div class="bg-slate-900/80 p-3 rounded-2xl border border-emerald-500/20">
             <div class="text-[10px] text-slate-400 font-bold uppercase">Total Elevation Gained</div>
-            <div class="text-2xl font-black text-emerald-400 font-scoreboard" x-text="hiking.totalElevationM.toLocaleString() + ' m'"></div>
+            <div class="text-2xl font-black text-emerald-400 font-scoreboard" x-text="formatNum(hiking ? hiking.totalElevationM : 14850) + ' m'"></div>
           </div>
           <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
             <div class="text-[10px] text-slate-400 font-bold uppercase">Total Trails Hiked</div>
@@ -913,7 +913,7 @@
 
       <!-- Hiking Photo Banner -->
       <div class="relative h-64 rounded-3xl overflow-hidden border border-slate-700/80 shadow-xl group">
-        <img :src="hiking.heroPhoto" alt="Whistler Alpine Ridge Hike" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+        <img src="assets/images/hiking.jpg" :src="hiking.heroPhoto" alt="Whistler Alpine Ridge Hike" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent flex items-end p-6">
           <div>
             <span class="bg-emerald-500 text-slate-950 font-black text-[10px] uppercase px-2 py-0.5 rounded">Summit Glory</span>
@@ -973,7 +973,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-slate-800 text-center">
           <div class="bg-slate-900/80 p-3 rounded-2xl border border-amber-500/20">
             <div class="text-[10px] text-slate-400 font-bold uppercase">Total Off-Road Mileage</div>
-            <div class="text-2xl font-black text-amber-400 font-scoreboard" x-text="fourByFour.totalOffRoadKm.toLocaleString() + ' km'"></div>
+            <div class="text-2xl font-black text-amber-400 font-scoreboard" x-text="formatNum(fourByFour ? fourByFour.totalOffRoadKm : 1420) + ' km'"></div>
           </div>
           <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
             <div class="text-[10px] text-slate-400 font-bold uppercase">Expeditions</div>
@@ -988,7 +988,7 @@
 
       <!-- 4x4 Photo Banner -->
       <div class="relative h-64 rounded-3xl overflow-hidden border border-slate-700/80 shadow-xl group">
-        <img :src="fourByFour.heroPhoto" alt="BC 4x4 Overland Adventure" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+        <img src="assets/images/4x4_adventure.jpg" :src="fourByFour.heroPhoto" alt="BC 4x4 Overland Adventure" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent flex items-end p-6">
           <div>
             <span class="bg-amber-500 text-slate-950 font-black text-[10px] uppercase px-2 py-0.5 rounded">Expedition Trail</span>
@@ -1076,7 +1076,7 @@
                   <span class="text-xs text-slate-400">@ <strong class="text-white" x-text="item.location"></strong></span>
                 </div>
                 <div class="text-xs text-slate-400">
-                  <span :class="item.result.includes('Released') ? 'text-sky-400' : 'text-amber-400'" class="font-bold" x-text="item.result"></span> • 
+                  <span :class="(item.result || '').includes('Released') ? 'text-sky-400' : 'text-amber-400'" class="font-bold" x-text="item.result"></span> • 
                   <span x-text="item.date"></span>
                 </div>
               </div>
@@ -1196,7 +1196,7 @@
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
                 <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-md">
-                  <img :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
+                  <img src="assets/images/ryker.jpg" :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
                 </div>
                 <div>
                   <div class="text-xs text-amber-400 font-bold uppercase">The Prospect</div>
@@ -1378,7 +1378,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-800">
           <div class="flex items-center gap-4 text-center md:text-left">
             <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-amber-400 p-0.5 bg-slate-900 shadow-xl">
-              <img :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
+              <img src="assets/images/ryker.jpg" :src="player.avatar" alt="Ryker" class="w-full h-full object-cover object-top" />
             </div>
             <div>
               <div class="flex items-center gap-2">
@@ -1457,7 +1457,7 @@
     <!-- Footer -->
     <footer class="mt-12 py-6 border-t border-slate-800/80 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-4">
       <div class="flex items-center gap-2">
-        <img :src="player.bwcLogo" class="w-5 h-5 inline-block" alt="BWC" />
+        <img src="assets/images/bwc_logo.svg" :src="player.bwcLogo" class="w-5 h-5 inline-block" alt="BWC" />
         <span>Burnaby Winter Club Academy • Ryker Crosby Carson #23 Hockey Pro Dashboard</span>
       </div>
       <div class="flex items-center gap-4">
@@ -1905,3 +1905,4 @@
 
 </body>
 </html>
+
