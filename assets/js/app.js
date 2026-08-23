@@ -1,6 +1,6 @@
-// Ryker Crosby Carson #23 Hockey Pro Dashboard - Core Reactive Application (v4.1)
-document.addEventListener('alpine:init', () => {
-  Alpine.data('hockeyApp', () => ({
+// Ryker Crosby Carson #23 Hockey Pro Dashboard - Core Reactive Application (v4.2 Robust Edition)
+function hockeyApp() {
+  return {
     activeTab: 'overview',
     soundMuted: false,
     selectedSeason: '2026-27',
@@ -77,20 +77,20 @@ document.addEventListener('alpine:init', () => {
 
     // Complete Elite Athlete Wearable Tracker (Garmin / Apple Watch Ultra style)
     wearable: {
-      vo2Max: 62.4, // Elite Tier
+      vo2Max: 62.4,
       vo2Tier: "Superior (Top 1% Class)",
       dailySteps: 18450,
       stepsTarget: 15000,
       activeCalories: 1480,
       totalCalories: 3820,
-      peakPowerWatts: 1280, // Wingate Sprint Burst
+      peakPowerWatts: 1280,
       avgPowerWatts: 420,
       restingHR: 50,
       maxHR: 198,
-      hrvMs: 88, // Parasympathetic Recovery
+      hrvMs: 88,
       spo2Percent: 99,
       sleepScore: 92,
-      trainingLoadACWR: 1.14, // Acute to Chronic Workload Ratio
+      trainingLoadACWR: 1.14,
       hrZones: [
         { zone: "Zone 1 (Active Recovery <120 bpm)", minutes: 45, pct: 21, color: "bg-blue-400" },
         { zone: "Zone 2 (Aerobic Base 120-145 bpm)", minutes: 90, pct: 42, color: "bg-emerald-400" },
@@ -160,7 +160,7 @@ document.addEventListener('alpine:init', () => {
       ]
     },
 
-    // Boxing Tracker (With Sasha Gier, 60 year old Russian Master Coach - No Picture Emblem)
+    // Boxing Tracker
     boxing: {
       coachName: "Sasha Gier",
       coachAge: 60,
@@ -255,110 +255,20 @@ document.addEventListener('alpine:init', () => {
       ]
     },
 
-    // Family Cheer Squad & Fan Club (Mom, Dad, Brillianna, Aurora, Matthison, Sasha Gier & Cats Mau, Atom, Jax)
+    // Family Cheer Squad & Fan Club
     family: [
-      {
-        id: "mom",
-        name: "Mom",
-        role: "Team General & Chief Fuel Officer",
-        photo: "assets/images/mom.jpg",
-        tag: "Pre-Game Pasta Queen",
-        quote: "No one outworks my #23! Always proud of your heart, courage, and hockey hustle, Ryker! Win those board battles!",
-        attendance: "28/28 Games",
-        badgeColor: "from-amber-500 to-rose-500",
-        cheersCount: 142
-      },
-      {
-        id: "dad",
-        name: "Dad",
-        role: "Pushup Rival & Home Coach",
-        photo: "assets/images/dad.jpg",
-        tag: "Pushup Showdown Challenger",
-        quote: "Keep your feet moving, drive the net, and shoot low for the rebound! And good luck beating my pushup set tonight, son!",
-        attendance: "28/28 Games",
-        badgeColor: "from-blue-600 to-amber-500",
-        cheersCount: 189
-      },
-      {
-        id: "brillianna",
-        name: "Brillianna",
-        role: "Cheer Captain & Sister #1",
-        photo: "assets/images/brillianna.jpg",
-        tag: "Loudest at the Glass",
-        quote: "Let's go Ryker! Snipe one top shelf! Forever your biggest fan screaming through the glass!",
-        attendance: "26/28 Games",
-        badgeColor: "from-pink-500 to-purple-600",
-        cheersCount: 98
-      },
-      {
-        id: "aurora",
-        name: "Aurora",
-        role: "Superfan Sister & Mountain Companion",
-        photo: "assets/images/aurora.jpg",
-        tag: "BWC Hype Squad",
-        quote: "Goal horn time for #23! Wheel, snipe, and celebrate brother!",
-        attendance: "25/28 Games",
-        badgeColor: "from-purple-500 to-indigo-600",
-        cheersCount: 84
-      },
-      {
-        id: "matthison",
-        name: "Matthison",
-        role: "Brother in Arms & Locker Room Hype",
-        photo: "assets/images/matthison.jpg",
-        tag: "High-Five Specialist",
-        quote: "Light the lamp, Ryker! Lay down some heavy hits and bring home the W!",
-        attendance: "27/28 Games",
-        badgeColor: "from-emerald-500 to-teal-600",
-        cheersCount: 112
-      },
-      {
-        id: "sasha_gier",
-        name: "Sasha Gier",
-        role: "Russian Boxing Master of Sport (60 yrs old)",
-        photo: "assets/images/boxing_glove.svg",
-        tag: "Soviet Boxing Coach",
-        quote: "Fast hands, heavy torque, unbreakable stamina! Turning punch power into 90mph puck snipes!",
-        attendance: "Training Ring",
-        badgeColor: "from-red-600 to-rose-800",
-        cheersCount: 106
-      },
-      {
-        id: "mau",
-        name: "Mau",
-        role: "Locker Room Mascot & Tuxedo Boss",
-        photo: "assets/images/mau.jpg",
-        tag: "Tuxedo Chief (Cat)",
-        quote: "Purring for a hat-trick! Don't forget my victory treats after you score!",
-        attendance: "Home Rink Boss",
-        badgeColor: "from-slate-700 to-slate-900",
-        cheersCount: 67
-      },
-      {
-        id: "atom",
-        name: "Atom",
-        role: "Zoomies Speed Coach (Orange Tabby)",
-        photo: "assets/images/atom.jpg",
-        tag: "3 AM Zoomies Coach (Cat)",
-        quote: "Teaching Ryker maximum skating acceleration! Keep the speed high on the rush!",
-        attendance: "Warmup Coach",
-        badgeColor: "from-amber-600 to-orange-500",
-        cheersCount: 76
-      },
-      {
-        id: "jax",
-        name: "Jax",
-        role: "Puck Hunter & Defensive Cat",
-        photo: "assets/images/jax.jpg",
-        tag: "Puck Pouncer (Cat)",
-        quote: "Always ready to pounce on loose pucks and provide championship chin scratches!",
-        attendance: "Game Day Napper",
-        badgeColor: "from-cyan-600 to-blue-700",
-        cheersCount: 59
-      }
+      { id: "mom", name: "Mom", role: "Team General & Chief Fuel Officer", photo: "assets/images/mom.jpg", tag: "Pre-Game Pasta Queen", quote: "No one outworks my #23! Always proud of your heart, courage, and hockey hustle, Ryker! Win those board battles!", attendance: "28/28 Games", badgeColor: "from-amber-500 to-rose-500", cheersCount: 142 },
+      { id: "dad", name: "Dad", role: "Pushup Rival & Home Coach", photo: "assets/images/dad.jpg", tag: "Pushup Showdown Challenger", quote: "Keep your feet moving, drive the net, and shoot low for the rebound! And good luck beating my pushup set tonight, son!", attendance: "28/28 Games", badgeColor: "from-blue-600 to-amber-500", cheersCount: 189 },
+      { id: "brillianna", name: "Brillianna", role: "Cheer Captain & Sister #1", photo: "assets/images/brillianna.jpg", tag: "Loudest at the Glass", quote: "Let's go Ryker! Snipe one top shelf! Forever your biggest fan screaming through the glass!", attendance: "26/28 Games", badgeColor: "from-pink-500 to-purple-600", cheersCount: 98 },
+      { id: "aurora", name: "Aurora", role: "Superfan Sister & Mountain Companion", photo: "assets/images/aurora.jpg", tag: "BWC Hype Squad", quote: "Goal horn time for #23! Wheel, snipe, and celebrate brother!", attendance: "25/28 Games", badgeColor: "from-purple-500 to-indigo-600", cheersCount: 84 },
+      { id: "matthison", name: "Matthison", role: "Brother in Arms & Locker Room Hype", photo: "assets/images/matthison.jpg", tag: "High-Five Specialist", quote: "Light the lamp, Ryker! Lay down some heavy hits and bring home the W!", attendance: "27/28 Games", badgeColor: "from-emerald-500 to-teal-600", cheersCount: 112 },
+      { id: "sasha_gier", name: "Sasha Gier", role: "Russian Boxing Master of Sport (60 yrs old)", photo: "assets/images/boxing_glove.svg", tag: "Soviet Boxing Coach", quote: "Fast hands, heavy torque, unbreakable stamina! Turning punch power into 90mph puck snipes!", attendance: "Training Ring", badgeColor: "from-red-600 to-rose-800", cheersCount: 106 },
+      { id: "mau", name: "Mau", role: "Locker Room Mascot & Tuxedo Boss", photo: "assets/images/mau.jpg", tag: "Tuxedo Chief (Cat)", quote: "Purring for a hat-trick! Don't forget my victory treats after you score!", attendance: "Home Rink Boss", badgeColor: "from-slate-700 to-slate-900", cheersCount: 67 },
+      { id: "atom", name: "Atom", role: "Zoomies Speed Coach (Orange Tabby)", photo: "assets/images/atom.jpg", tag: "3 AM Zoomies Coach (Cat)", quote: "Teaching Ryker maximum skating acceleration! Keep the speed high on the rush!", attendance: "Warmup Coach", badgeColor: "from-amber-600 to-orange-500", cheersCount: 76 },
+      { id: "jax", name: "Jax", role: "Puck Hunter & Defensive Cat", photo: "assets/images/jax.jpg", tag: "Puck Pouncer (Cat)", quote: "Always ready to pounce on loose pucks and provide championship chin scratches!", attendance: "Game Day Napper", badgeColor: "from-cyan-600 to-blue-700", cheersCount: 59 }
     ],
 
-    // Cheer Wall Community Posts
+    // Cheer Wall
     cheerWall: [
       { id: 1, author: "Mom", avatar: "assets/images/mom.jpg", message: "Packed the extra electrolyte bottles and pre-cooked pasta for tonight's game vs St. George's! Go get 'em Ryker! ❤️🏒", time: "2 hours ago", likes: 8 },
       { id: 2, author: "Dad", avatar: "assets/images/dad.jpg", message: "Just did 50 pushups between meetings. Ball is in your court, #23! Let's see you match it before skate!", time: "4 hours ago", likes: 12 },
@@ -406,132 +316,52 @@ document.addEventListener('alpine:init', () => {
     ],
 
     // Forms
-    newGame: {
-      date: new Date().toISOString().split('T')[0],
-      opponent: '',
-      result: 'W 4-2',
-      goals: 1,
-      assists: 1,
-      hits: 3,
-      plusMinus: 1,
-      pim: 0,
-      sog: 4,
-      toi: '21:00',
-      stars: '1st Star'
-    },
-
-    newShot: {
-      x: 450,
-      y: 210,
-      isGoal: true,
-      result: 'goal',
-      type: 'Wrist Shot',
-      period: '1',
-      time: '12:00',
-      opponent: 'Next Opponent'
-    },
-
-    newBoxing: {
-      date: new Date().toISOString().split('T')[0],
-      title: '',
-      rounds: 6,
-      duration: '45 min',
-      focus: 'Soviet Mitts & Footwork',
-      coachNotes: ''
-    },
-
-    newFishing: {
-      date: new Date().toISOString().split('T')[0],
-      species: 'Coho Salmon',
-      weight: '',
-      length: '',
-      location: 'Cheakamus River',
-      tackle: 'Blue Fox Spinner',
-      result: 'Released',
-      notes: ''
-    },
-
-    newOnewheel: {
-      date: new Date().toISOString().split('T')[0],
-      route: '',
-      distance: '15.0 km',
-      topSpeed: '32.0 km/h',
-      duration: '45 min',
-      terrain: 'Valley Trail',
-      rating: 5,
-      notes: ''
-    },
-
-    newHike: {
-      date: new Date().toISOString().split('T')[0],
-      trail: '',
-      distance: '12.0 km',
-      elevationM: 650,
-      duration: '4h 15m',
-      companions: 'Dad & Family',
-      notes: ''
-    },
-
-    new4x4: {
-      date: new Date().toISOString().split('T')[0],
-      trail: '',
-      distance: '40 km',
-      difficulty: 'Moderate FSR',
-      4wdMode: '4-High',
-      companions: 'Dad & Matthison',
-      notes: ''
-    },
-
-    newCheer: {
-      author: 'Mom',
-      message: ''
-    },
-
-    newWorkout: {
-      title: '',
-      type: 'Strength',
-      exercises: '',
-      duration: '60 min',
-      intensity: 'High'
-    },
+    newGame: { date: new Date().toISOString().split('T')[0], opponent: '', result: 'W 4-2', goals: 1, assists: 1, hits: 3, plusMinus: 1, pim: 0, sog: 4, toi: '21:00', stars: '1st Star' },
+    newShot: { x: 450, y: 210, isGoal: true, result: 'goal', type: 'Wrist Shot', period: '1', time: '12:00', opponent: 'Next Opponent' },
+    newBoxing: { date: new Date().toISOString().split('T')[0], title: '', rounds: 6, duration: '45 min', focus: 'Soviet Mitts & Footwork', coachNotes: '' },
+    newFishing: { date: new Date().toISOString().split('T')[0], species: 'Coho Salmon', weight: '', length: '', location: 'Cheakamus River', tackle: 'Blue Fox Spinner', result: 'Released', notes: '' },
+    newOnewheel: { date: new Date().toISOString().split('T')[0], route: '', distance: '15.0 km', topSpeed: '32.0 km/h', duration: '45 min', terrain: 'Valley Trail', rating: 5, notes: '' },
+    newHike: { date: new Date().toISOString().split('T')[0], trail: '', distance: '12.0 km', elevationM: 650, duration: '4h 15m', companions: 'Dad & Family', notes: '' },
+    new4x4: { date: new Date().toISOString().split('T')[0], trail: '', distance: '40 km', difficulty: 'Moderate FSR', 4wdMode: '4-High', companions: 'Dad & Matthison', notes: '' },
+    newCheer: { author: 'Mom', message: '' },
+    newWorkout: { title: '', type: 'Strength', exercises: '', duration: '60 min', intensity: 'High' },
     // Computed Stats based on Selected Season
     get currentSeasonData() {
       if (this.selectedSeason === '2026-27') {
-        return {
-          gp: this.games.length,
-          goals: this.games.reduce((s, g) => s + (Number(g.goals) || 0), 0),
-          assists: this.games.reduce((s, g) => s + (Number(g.assists) || 0), 0),
-          pts: this.games.reduce((s, g) => s + (Number(g.goals) || 0) + (Number(g.assists) || 0), 0),
-          hits: this.games.reduce((s, g) => s + (Number(g.hits) || 0), 0),
-          plusMinus: this.games.reduce((s, g) => s + (Number(g.plusMinus) || 0), 0),
-          pim: this.games.reduce((s, g) => s + (Number(g.pim) || 0), 0),
-          sog: this.games.reduce((s, g) => s + (Number(g.sog) || 0), 0),
-          foWin: '61.8%',
-          toi: '21:45'
-        };
+        const gp = this.games ? this.games.length : 28;
+        const goals = this.games ? this.games.reduce((s, g) => s + (Number(g.goals) || 0), 0) : 24;
+        const assists = this.games ? this.games.reduce((s, g) => s + (Number(g.assists) || 0), 0) : 31;
+        const pts = goals + assists;
+        const hits = this.games ? this.games.reduce((s, g) => s + (Number(g.hits) || 0), 0) : 86;
+        const plusMinus = this.games ? this.games.reduce((s, g) => s + (Number(g.plusMinus) || 0), 0) : 29;
+        const pim = this.games ? this.games.reduce((s, g) => s + (Number(g.pim) || 0), 0) : 18;
+        const sog = this.games ? this.games.reduce((s, g) => s + (Number(g.sog) || 0), 0) : 112;
+        return { gp, goals, assists, pts, hits, plusMinus, pim, sog, foWin: '61.8%', toi: '21:45' };
       }
       return this.seasonArchives[this.selectedSeason] || this.seasonArchives['2026-27'];
     },
 
-    get totalGP() { return this.currentSeasonData.gp; },
-    get totalGoals() { return this.currentSeasonData.goals; },
-    get totalAssists() { return this.currentSeasonData.assists; },
-    get totalPoints() { return this.currentSeasonData.pts; },
-    get totalHits() { return this.currentSeasonData.hits; },
-    get totalPlusMinus() { return this.currentSeasonData.plusMinus; },
-    get totalPIM() { return this.currentSeasonData.pim; },
-    get totalSOG() { return this.currentSeasonData.sog; },
+    get totalGP() { return this.currentSeasonData ? this.currentSeasonData.gp : 0; },
+    get totalGoals() { return this.currentSeasonData ? this.currentSeasonData.goals : 0; },
+    get totalAssists() { return this.currentSeasonData ? this.currentSeasonData.assists : 0; },
+    get totalPoints() { return this.currentSeasonData ? this.currentSeasonData.pts : 0; },
+    get totalHits() { return this.currentSeasonData ? this.currentSeasonData.hits : 0; },
+    get totalPlusMinus() { return this.currentSeasonData ? this.currentSeasonData.plusMinus : 0; },
+    get totalPIM() { return this.currentSeasonData ? this.currentSeasonData.pim : 0; },
+    get totalSOG() { return this.currentSeasonData ? this.currentSeasonData.sog : 0; },
     get pointsPerGame() { return this.totalGP ? (this.totalPoints / this.totalGP).toFixed(2) : '0.00'; },
     get shootingPercentage() { return this.totalSOG ? ((this.totalGoals / this.totalSOG) * 100).toFixed(1) + '%' : '0.0%'; },
     
     // Pushup Winner Today
     get pushupLeaderToday() {
+      if (!this.pushups) return 'tie';
       if (this.pushups.todayRyker > this.pushups.todayDad) return 'ryker';
       if (this.pushups.todayDad > this.pushups.todayRyker) return 'dad';
       return 'tie';
     },
 
     get pushupLeaderDiff() {
+      if (!this.pushups) return 0;
       return Math.abs(this.pushups.todayRyker - this.pushups.todayDad);
     },
 
@@ -540,26 +370,31 @@ document.addEventListener('alpine:init', () => {
       this.loadStorage();
       this.updateBanter();
 
-      this.$nextTick(() => {
-        this.rinkChart = new HockeyRinkChart('rinkContainer', {
-          shots: this.shots,
-          onAddShot: (coords) => {
-            this.newShot.x = coords.x;
-            this.newShot.y = coords.y;
-            this.showAddShotModal = true;
+      setTimeout(() => {
+        try {
+          if (typeof HockeyRinkChart === 'function' && document.getElementById('rinkContainer')) {
+            this.rinkChart = new HockeyRinkChart('rinkContainer', {
+              shots: this.shots,
+              onAddShot: (coords) => {
+                this.newShot.x = coords.x;
+                this.newShot.y = coords.y;
+                this.showAddShotModal = true;
+              }
+            });
           }
-        });
-
-        window.initScoringChart(this.games);
-        window.initPushupDuelChart(this.pushups.history);
-        window.initScoutingRadar(this.scoutRadar);
-      });
+          if (typeof window.initScoringChart === 'function' && document.getElementById('scoringChart')) {
+            window.initScoringChart(this.games);
+          }
+        } catch (err) {
+          console.warn('Initial chart render warning:', err);
+        }
+      }, 100);
     },
 
     // Switch Season
     setSeason(seasonKey) {
       this.selectedSeason = seasonKey;
-      window.hockeyAudio.playPushupChime();
+      if (window.hockeyAudio) window.hockeyAudio.playPushupChime();
     },
 
     // Switch Webcam Feed
@@ -570,14 +405,14 @@ document.addEventListener('alpine:init', () => {
         this.whistlerWebcam.locationName = selected.name;
         this.whistlerWebcam.elevation = selected.elevation;
         this.whistlerWebcam.lastUpdated = "Live Feed • Refreshed just now";
-        window.hockeyAudio.playPushupChime();
+        if (window.hockeyAudio) window.hockeyAudio.playPushupChime();
       }
     },
 
     refreshWebcam() {
       const d = new Date();
       this.whistlerWebcam.lastUpdated = "Live Feed • Refreshed " + d.toLocaleTimeString();
-      window.hockeyAudio.playPushupChime();
+      if (window.hockeyAudio) window.hockeyAudio.playPushupChime();
     },
 
     // Profile Picture File Upload Handler
@@ -618,7 +453,7 @@ document.addEventListener('alpine:init', () => {
       a.download = "Ryker_Carson_23_Full_Athletic_Stats_" + new Date().toISOString().split('T')[0] + ".json";
       a.click();
       URL.revokeObjectURL(url);
-      window.hockeyAudio.playVictoryWhistle();
+      if (window.hockeyAudio) window.hockeyAudio.playVictoryWhistle();
     },
 
     // Storage Sync
@@ -639,7 +474,7 @@ document.addEventListener('alpine:init', () => {
           cheerWall: this.cheerWall,
           family: this.family
         };
-        localStorage.setItem('ryker_hockey_dashboard_data_v6', JSON.stringify(payload));
+        localStorage.setItem('ryker_hockey_dashboard_data_v7', JSON.stringify(payload));
       } catch (e) {
         console.warn('Storage sync error', e);
       }
@@ -647,28 +482,21 @@ document.addEventListener('alpine:init', () => {
 
     loadStorage() {
       try {
-        const saved = localStorage.getItem('ryker_hockey_dashboard_data_v6');
+        const saved = localStorage.getItem('ryker_hockey_dashboard_data_v7');
         if (saved) {
           const parsed = JSON.parse(saved);
           if (parsed.playerAvatar) this.player.avatar = parsed.playerAvatar;
-          if (parsed.games) this.games = parsed.games;
-          if (parsed.shots) this.shots = parsed.shots;
-          if (parsed.pushups) this.pushups = parsed.pushups;
-          if (parsed.wearable) this.wearable = parsed.wearable;
-          if (parsed.boxing) this.boxing = parsed.boxing;
-          if (parsed.fishing) this.fishing = parsed.fishing;
-          if (parsed.onewheel) this.onewheel = parsed.onewheel;
-          if (parsed.hiking) this.hiking = parsed.hiking;
-          if (parsed.fourByFour) this.fourByFour = parsed.fourByFour;
-          if (parsed.fitness) this.fitness = parsed.fitness;
-          if (parsed.cheerWall) this.cheerWall = parsed.cheerWall;
-          if (parsed.family) {
-            parsed.family.forEach(f => {
-              const def = this.family.find(x => x.id === f.id);
-              if (def) f.photo = def.photo;
-            });
-            this.family = parsed.family;
-          }
+          if (parsed.games && Array.isArray(parsed.games)) this.games = parsed.games;
+          if (parsed.shots && Array.isArray(parsed.shots)) this.shots = parsed.shots;
+          if (parsed.pushups) Object.assign(this.pushups, parsed.pushups);
+          if (parsed.wearable) Object.assign(this.wearable, parsed.wearable);
+          if (parsed.boxing) Object.assign(this.boxing, parsed.boxing);
+          if (parsed.fishing) Object.assign(this.fishing, parsed.fishing);
+          if (parsed.onewheel) Object.assign(this.onewheel, parsed.onewheel);
+          if (parsed.hiking) Object.assign(this.hiking, parsed.hiking);
+          if (parsed.fourByFour) Object.assign(this.fourByFour, parsed.fourByFour);
+          if (parsed.fitness) Object.assign(this.fitness, parsed.fitness);
+          if (parsed.cheerWall && Array.isArray(parsed.cheerWall)) this.cheerWall = parsed.cheerWall;
         }
       } catch (e) {
         console.warn('Could not load storage', e);
@@ -691,10 +519,12 @@ document.addEventListener('alpine:init', () => {
         if (todayEntry) todayEntry.dad = this.pushups.todayDad;
       }
 
-      window.hockeyAudio.playPushupChime();
+      if (window.hockeyAudio) window.hockeyAudio.playPushupChime();
       this.updateBanter();
       this.saveStorage();
-      window.initPushupDuelChart(this.pushups.history);
+      if (typeof window.initPushupDuelChart === 'function') {
+        window.initPushupDuelChart(this.pushups.history);
+      }
 
       if (this.pushups.todayRyker >= this.pushups.targetDaily || this.pushups.todayDad >= this.pushups.targetDaily) {
         this.triggerConfetti();
@@ -732,7 +562,7 @@ document.addEventListener('alpine:init', () => {
       this.boxing.totalRounds += Number(this.newBoxing.rounds) || 6;
       this.boxing.totalSessions += 1;
       
-      window.hockeyAudio.playBoxingBell();
+      if (window.hockeyAudio) window.hockeyAudio.playBoxingBell();
       this.triggerConfetti();
       this.showAddBoxingModal = false;
       this.newBoxing.title = '';
@@ -759,7 +589,7 @@ document.addEventListener('alpine:init', () => {
       });
       this.fishing.totalCatches += 1;
       
-      window.hockeyAudio.playVictoryWhistle();
+      if (window.hockeyAudio) window.hockeyAudio.playVictoryWhistle();
       this.triggerConfetti();
       this.showAddFishingModal = false;
       this.newFishing.species = 'Coho Salmon';
@@ -790,7 +620,7 @@ document.addEventListener('alpine:init', () => {
       this.onewheel.odometerKm = Number((this.onewheel.odometerKm + distNum).toFixed(1));
       this.onewheel.totalRides += 1;
 
-      window.hockeyAudio.playVictoryWhistle();
+      if (window.hockeyAudio) window.hockeyAudio.playVictoryWhistle();
       this.triggerConfetti();
       this.showAddOnewheelModal = false;
       this.newOnewheel.route = '';
@@ -820,7 +650,7 @@ document.addEventListener('alpine:init', () => {
       this.hiking.totalElevationM += elevNum;
       this.hiking.totalHikes += 1;
 
-      window.hockeyAudio.playVictoryWhistle();
+      if (window.hockeyAudio) window.hockeyAudio.playVictoryWhistle();
       this.triggerConfetti();
       this.showAddHikeModal = false;
       this.newHike.trail = '';
@@ -848,7 +678,7 @@ document.addEventListener('alpine:init', () => {
       this.fourByFour.totalOffRoadKm += distNum;
       this.fourByFour.expeditions += 1;
 
-      window.hockeyAudio.playVictoryWhistle();
+      if (window.hockeyAudio) window.hockeyAudio.playVictoryWhistle();
       this.triggerConfetti();
       this.showAdd4x4Modal = false;
       this.new4x4.trail = '';
@@ -859,7 +689,7 @@ document.addEventListener('alpine:init', () => {
     // Habit toggle
     toggleHabit(habit) {
       habit.done = !habit.done;
-      window.hockeyAudio.playPushupChime();
+      if (window.hockeyAudio) window.hockeyAudio.playPushupChime();
       this.calculateRecovery();
       this.saveStorage();
     },
@@ -867,7 +697,7 @@ document.addEventListener('alpine:init', () => {
     // Water tracker
     addWater(liters) {
       this.fitness.waterLiters = Math.min(4.0, Number((this.fitness.waterLiters + liters).toFixed(2)));
-      window.hockeyAudio.playPushupChime();
+      if (window.hockeyAudio) window.hockeyAudio.playPushupChime();
       this.calculateRecovery();
       this.saveStorage();
     },
@@ -904,12 +734,14 @@ document.addEventListener('alpine:init', () => {
       if (Number(this.newGame.goals) > 0) {
         this.triggerGoalHorn();
       } else {
-        window.hockeyAudio.playVictoryWhistle();
+        if (window.hockeyAudio) window.hockeyAudio.playVictoryWhistle();
       }
 
       this.showAddGameModal = false;
       this.saveStorage();
-      window.initScoringChart(this.games);
+      if (typeof window.initScoringChart === 'function') {
+        window.initScoringChart(this.games);
+      }
 
       this.newGame.opponent = '';
       this.newGame.goals = 1;
@@ -936,7 +768,7 @@ document.addEventListener('alpine:init', () => {
       if (isGoal) {
         this.triggerGoalHorn();
       } else {
-        window.hockeyAudio.playPuckShot();
+        if (window.hockeyAudio) window.hockeyAudio.playPuckShot();
       }
 
       this.showAddShotModal = false;
@@ -957,7 +789,7 @@ document.addEventListener('alpine:init', () => {
         duration: this.newWorkout.duration || "60 min",
         intensity: this.newWorkout.intensity || "High"
       });
-      window.hockeyAudio.playVictoryWhistle();
+      if (window.hockeyAudio) window.hockeyAudio.playVictoryWhistle();
       this.showAddWorkoutModal = false;
       this.newWorkout.title = '';
       this.newWorkout.exercises = '';
@@ -984,20 +816,20 @@ document.addEventListener('alpine:init', () => {
 
     likeCheer(item) {
       item.likes++;
-      window.hockeyAudio.playPushupChime();
+      if (window.hockeyAudio) window.hockeyAudio.playPushupChime();
       this.saveStorage();
     },
 
     cheerFamilyMember(member) {
       member.cheersCount++;
-      window.hockeyAudio.playPushupChime();
+      if (window.hockeyAudio) window.hockeyAudio.playPushupChime();
       this.triggerConfetti();
       this.saveStorage();
     },
 
     // Audio & Confetti triggers
     triggerGoalHorn() {
-      window.hockeyAudio.playGoalHorn();
+      if (window.hockeyAudio) window.hockeyAudio.playGoalHorn();
       this.triggerConfetti();
     },
 
@@ -1013,15 +845,26 @@ document.addEventListener('alpine:init', () => {
     },
 
     toggleMute() {
-      this.soundMuted = window.hockeyAudio.toggleMute();
+      if (window.hockeyAudio) {
+        this.soundMuted = window.hockeyAudio.toggleMute();
+      }
     },
 
     // Reset Data
     resetToDefault() {
       if (confirm("Reset dashboard data to default BWC season stats and scores?")) {
-        localStorage.removeItem('ryker_hockey_dashboard_data_v6');
+        localStorage.removeItem('ryker_hockey_dashboard_data_v7');
         location.reload();
       }
     }
-  }));
-});
+  };
+}
+
+// Alpine.js Registration
+if (typeof window.Alpine !== 'undefined') {
+  window.Alpine.data('hockeyApp', hockeyApp);
+} else {
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('hockeyApp', hockeyApp);
+  });
+}
